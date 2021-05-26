@@ -34,6 +34,7 @@ from utils.loss import ComputeLoss
 from utils.plots import plot_images, plot_labels, plot_results, plot_evolution
 from utils.torch_utils import ModelEMA, select_device, intersect_dicts, torch_distributed_zero_first, de_parallel
 from utils.wandb_logging.wandb_utils import WandbLogger, check_wandb_resume
+from utils.dvc_utils.dvc_utils import DVCLogger
 
 logger = logging.getLogger(__name__)
 
@@ -74,6 +75,9 @@ def train(hyp, opt, device, tb_writer=None):
         data_dict = wandb_logger.data_dict
         if wandb_logger.wandb:
             weights, epochs, hyp = opt.weights, opt.epochs, opt.hyp  # WandbLogger might update weights, epochs if resuming
+        dvc_logger = DVCLogger("training_metrics")
+        # TODO: loggers are used to store pictures - how we should proceed with dvc?
+        loggers['dvc'] = dvc_logger
 
     nc = 1 if opt.single_cls else int(data_dict['nc'])  # number of classes
     names = ['item'] if opt.single_cls and len(data_dict['names']) != 1 else data_dict['names']  # class names
@@ -351,6 +355,8 @@ def train(hyp, opt, device, tb_writer=None):
             final_epoch = epoch + 1 == epochs
             if not opt.notest or final_epoch:  # Calculate mAP
                 wandb_logger.current_epoch = epoch + 1
+                # TODO: possibly, dvclive should be treated the same way
+                # it seems this could be connected with resuming the training from some checkpoint epoch
                 results, maps, times = test.test(data_dict,
                                                  batch_size=batch_size * 2,
                                                  imgsz=imgsz_test,
@@ -378,6 +384,8 @@ def train(hyp, opt, device, tb_writer=None):
                     tb_writer.add_scalar(tag, x, epoch)  # tensorboard
                 if wandb_logger.wandb:
                     wandb_logger.log({tag: x})  # W&B
+                dvc_logger.log(tag, x)
+            dvc_logger.next_step()
 
             # Update best mAP
             fi = fitness(np.array(results).reshape(1, -1))  # weighted combination of [P, R, mAP@.5, mAP@.5-.95]
