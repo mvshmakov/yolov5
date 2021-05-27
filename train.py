@@ -75,7 +75,7 @@ def train(hyp, opt, device, tb_writer=None):
         data_dict = wandb_logger.data_dict
         if wandb_logger.wandb:
             weights, epochs, hyp = opt.weights, opt.epochs, opt.hyp  # WandbLogger might update weights, epochs if resuming
-        dvc_logger = DVCLogger("training_metrics")
+        dvc_logger = DVCLogger(f"{opt.save_dir}/dvclive")
         # TODO: loggers are used to store pictures - how we should proceed with dvc?
         loggers['dvc'] = dvc_logger
 
