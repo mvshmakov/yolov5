@@ -1,0 +1,16 @@
+{
+    "step": 0,
+    "train_box_loss": 0.10577377676963806,
+    "train_obj_loss": 0.1131528913974762,
+    "train_cls_loss": 0.1032583937048912,
+    "metrics_precision": 0.0,
+    "metrics_recall": 0.0,
+    "metrics_mAP_0.5": 0.0,
+    "metrics_mAP_0.5:0.95": 0.0,
+    "val_box_loss": 0.10697739571332932,
+    "val_obj_loss": 0.061371736228466034,
+    "val_cls_loss": 0.10296639800071716,
+    "x_lr0": 1e-05,
+    "x_lr1": 1e-05,
+    "x_lr2": 0.09991
+}
