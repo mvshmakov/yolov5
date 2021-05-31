@@ -1,0 +1,9 @@
+stages:
+  train:
+    deps:
+    - train.py
+    cmd: python train.py --data ${train.data} --cfg ${train.cfg} --weights ${train.weights} --batch-size
+      ${train.batch-size} --epoch ${train.epoch}
+    outs:
+    - runs/train/weights:
+        checkpoint: true
