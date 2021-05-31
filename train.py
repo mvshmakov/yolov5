@@ -75,8 +75,7 @@ def train(hyp, opt, device, tb_writer=None):
         data_dict = wandb_logger.data_dict
         if wandb_logger.wandb:
             weights, epochs, hyp = opt.weights, opt.epochs, opt.hyp  # WandbLogger might update weights, epochs if resuming
-        # dvc_logger = DVCLogger(f"{opt.save_dir}/dvclive")
-        dvc_logger = DVCLogger(f"training_metrics")
+        dvc_logger = DVCLogger(f"{opt.save_dir}/metrics")
         # TODO: loggers are used to store pictures - how we should proceed with dvc?
         loggers['dvc'] = dvc_logger
 
@@ -354,7 +353,9 @@ def train(hyp, opt, device, tb_writer=None):
             # mAP
             ema.update_attr(model, include=['yaml', 'nc', 'hyp', 'gr', 'names', 'stride', 'class_weights'])
             final_epoch = epoch + 1 == epochs
-            if not opt.notest or final_epoch:  # Calculate mAP
+            # TODO: skip this as of error
+            if False:
+            # if not opt.notest or final_epoch:  # Calculate mAP
                 wandb_logger.current_epoch = epoch + 1
                 # TODO: possibly, dvclive should be treated the same way
                 # it seems this could be connected with resuming the training from some checkpoint epoch
@@ -427,7 +428,8 @@ def train(hyp, opt, device, tb_writer=None):
                                               if (save_dir / f).exists()]})
         # Test best.pt
         logger.info('%g epochs completed in %.3f hours.\n' % (epoch - start_epoch + 1, (time.time() - t0) / 3600))
-        if opt.data.endswith('coco.yaml') and nc == 80:  # if COCO
+        # TODO: training errors, remove later
+        if False:  # opt.data.endswith('coco.yaml') and nc == 80:  # if COCO
             for m in [last, best] if best.exists() else [last]:  # speed, mAP tests
                 results, _, _ = test.test(opt.data,
                                           batch_size=batch_size * 2,
