@@ -1,0 +1,6 @@
+train:
+  data: coco.yaml
+  cfg: yolov5s.yaml
+  weights: '""'
+  batch-size: 1
+  epoch: 2
