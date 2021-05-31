@@ -1,16 +1,17 @@
 schema: '2.0'
 stages:
   train:
-    cmd: python train.py --data coco.yaml --cfg yolov5s.yaml --weights "" --batch-size
-      1 --epoch 2
+    cmd: python train.py --data ./data/coco.yaml --cfg ./models/yolov5s.yaml --weights
+      "" --batch-size 1 --epochs 2
     deps:
     - path: train.py
-      md5: 93371a9507d70a6b5d15297f505f09a4
-      size: 34397
+      md5: 4638480d639f53062fc0d63a673c2ddd
+      size: 34163
     outs:
-    - path: hyp.yaml
-    - path: opt.yaml
     - path: runs/train/confusion_matrix.png
+    - path: runs/train/hyp.yaml
+      md5: 3afabb397cf52e37a10987f329e97b96
+      size: 356
     - path: runs/train/labels_correlogram.jpg
       md5: 258ad7b635c56fdfc058ee34a47d1618
       size: 235120
@@ -25,6 +26,6 @@ stages:
       md5: 11200d4922032f003a4a8c310455ff36
       size: 73664
     - path: runs/train/weights
-      md5: d796a431e89b1de526802ea42ea8a155.dir
-      size: 29514294
+      md5: f62564fa3e4a3e1af77bf15ec46f653a.dir
+      size: 29514358
       nfiles: 2

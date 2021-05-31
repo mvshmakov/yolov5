@@ -2,17 +2,19 @@ stages:
   train:
     deps:
       - train.py
+    # TODO: add other args from train.py
     cmd: python train.py --data ${train.data} --cfg ${train.cfg} --weights ${train.weights} --batch-size
-      ${train.batch-size} --epoch ${train.epoch}
+      ${train.batch_size} --epochs ${train.epochs}
     outs:
       - runs/train/weights:
           checkpoint: true
-      - hyp.yaml
-      - opt.yaml
       - runs/train/labels_correlogram.jpg
       - runs/train/labesl.jpg
       - runs/train/train_batch0.jpg
       - runs/train/confusion_matrix.png
       - runs/train/results.png
     metrics:
-      - runs/train/results.txt
+      - runs/train/results.txt:
+          cache: false
+      - runs/train/hyp.yaml:
+          cache: false
