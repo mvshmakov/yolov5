@@ -1,9 +1,18 @@
 stages:
   train:
     deps:
-    - train.py
+      - train.py
     cmd: python train.py --data ${train.data} --cfg ${train.cfg} --weights ${train.weights} --batch-size
       ${train.batch-size} --epoch ${train.epoch}
     outs:
-    - runs/train/weights:
-        checkpoint: true
+      - runs/train/weights:
+          checkpoint: true
+      - hyp.yaml
+      - opt.yaml
+      - runs/train/labels_correlogram.jpg
+      - runs/train/labesl.jpg
+      - runs/train/train_batch0.jpg
+      - runs/train/confusion_matrix.png
+      - runs/train/results.png
+    metrics:
+      - runs/train/results.txt
