@@ -3,6 +3,7 @@ stages:
     deps:
       - train.py
     # TODO: add other args from train.py
+    # Would be great to unravel yaml dict here **{train} instead of repeating everything
     cmd: python train.py --data ${train.data} --cfg ${train.cfg} --weights ${train.weights} --batch-size
       ${train.batch_size} --epochs ${train.epochs}
     outs:
@@ -18,3 +19,28 @@ stages:
           cache: false
       - runs/train/hyp.yaml:
           cache: false
+  # TODO: should it be here? And detect/export stages?
+  # SHould they be tracked with dvc? -- Just in dvc, not in pipelines, probably
+  test:
+    deps:
+      - test.py
+    # TODO: add weights from the last stage and other params
+    cmd: python test.py
+    outs:
+      - runs/test/F1_curve.png
+      - runs/test/P_curve.png
+      - runs/test/confusion_matrix.png
+      - runs/test/test_batch0_pred.jpg
+      - runs/test/PR_curve.png
+      - runs/test/R_curve.png
+      - runs/test/test_batch0_labels.jpg
+  # TODO: the same as with the previous job
+  hubconf:
+    deps:
+      - hubconf.py
+    cmd: python hubconf.py
+    outs:
+      - runs/hub/bus.jpg
+      - runs/hub/image2.jpg
+      - runs/hub/image4.jpg
+      - runs/hub/zidane.jpg

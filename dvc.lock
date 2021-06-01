@@ -26,6 +26,53 @@ stages:
       md5: 11200d4922032f003a4a8c310455ff36
       size: 73664
     - path: runs/train/weights
-      md5: f62564fa3e4a3e1af77bf15ec46f653a.dir
+      md5: 4efe64e4ee6d1462e90ac8724fde5e79.dir
       size: 29514358
       nfiles: 2
+  test:
+    cmd: python test.py
+    deps:
+    - path: test.py
+      md5: b6189ddea1abd6f0f54deb24e15d9784
+      size: 16903
+    outs:
+    - path: runs/test/F1_curve.png
+      md5: 65f413bb09dfb881cf2b752b6cd75765
+      size: 147008
+    - path: runs/test/PR_curve.png
+      md5: 06f13b031315bca51ff8489db66d73a3
+      size: 61800
+    - path: runs/test/P_curve.png
+      md5: 8a6384aaceb50e5f04d904202a8c201b
+      size: 141776
+    - path: runs/test/R_curve.png
+      md5: cd1ef09868f8bf3d47a93f4932fd79b0
+      size: 87710
+    - path: runs/test/confusion_matrix.png
+      md5: d91a4fbf36c0c1aeffd91f7982483f9d
+      size: 440365
+    - path: runs/test/test_batch0_labels.jpg
+      md5: c5389cf23e52a04d2b419ecaa134a521
+      size: 166398
+    - path: runs/test/test_batch0_pred.jpg
+      md5: 47bc9a0e3694fa6beeb2445f7307455b
+      size: 159463
+  hubconf:
+    cmd: python hubconf.py
+    deps:
+    - path: hubconf.py
+      md5: b5c23686a385743956842a3e6a4e7755
+      size: 5638
+    outs:
+    - path: runs/hub/bus.jpg
+      md5: 2f590610fb637a416f949b148e7e8142
+      size: 216448
+    - path: runs/hub/image2.jpg
+      md5: 6fb35cfbf8d832ce8299084fad4f9486
+      size: 215878
+    - path: runs/hub/image4.jpg
+      md5: dbe0ce003e22ceb4b36c7c0199cdfd8e
+      size: 3827
+    - path: runs/hub/zidane.jpg
+      md5: 9fe85a9f15900b2e1af0c9572bcf11a7
+      size: 99681
