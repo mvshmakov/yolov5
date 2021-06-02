@@ -1,33 +1,37 @@
 schema: '2.0'
 stages:
   train:
-    cmd: python train.py --data ./data/coco.yaml --cfg ./models/yolov5s.yaml --weights
-      "" --batch-size 1 --epochs 2
+    cmd: python train.py --data ./data/coco128.yaml --cfg ./models/yolov5s.yaml --weights
+      "" --batch-size 16 --epochs 1
     deps:
     - path: train.py
-      md5: 4638480d639f53062fc0d63a673c2ddd
-      size: 34163
+      md5: b6e6fe503b1beefc84e85c4e4faee151
+      size: 34173
     outs:
     - path: runs/train/confusion_matrix.png
+      md5: ea7c12b2de4bf17646ce868e65c7b33c
+      size: 450345
     - path: runs/train/hyp.yaml
       md5: 3afabb397cf52e37a10987f329e97b96
       size: 356
+    - path: runs/train/labels.jpg
+      md5: d61cfe7575c61823439c4dc25d92d65a
+      size: 457560
     - path: runs/train/labels_correlogram.jpg
-      md5: 258ad7b635c56fdfc058ee34a47d1618
-      size: 235120
-    - path: runs/train/labesl.jpg
+      md5: 0b0eb198177da2345b8a26c86176caea
+      size: 349727
     - path: runs/train/results.png
-      md5: b66dcd570faaa60546e1100daae742f6
-      size: 135523
+      md5: 7dd786b6e84a7414760e87f0a1682592
+      size: 139882
     - path: runs/train/results.txt
-      md5: cc275162a5904d78dfd151f482e272cb
-      size: 302
+      md5: 0344516e30ddcfe01ec9dbcf295c5bd9
+      size: 151
     - path: runs/train/train_batch0.jpg
-      md5: 11200d4922032f003a4a8c310455ff36
-      size: 73664
+      md5: e6705838b75a90e80382b1f273a0e8bf
+      size: 377703
     - path: runs/train/weights
-      md5: 4efe64e4ee6d1462e90ac8724fde5e79.dir
-      size: 29514358
+      md5: 2f0ef6a2bf6db6fc94e7943f467b3f3e.dir
+      size: 29649694
       nfiles: 2
   test:
     cmd: python test.py
@@ -76,3 +80,15 @@ stages:
     - path: runs/hub/zidane.jpg
       md5: 9fe85a9f15900b2e1af0c9572bcf11a7
       size: 99681
+  detect:
+    cmd: python detect.py --weights runs/train/weights/best.pt
+    deps:
+    - path: detect.py
+      md5: 55e85794afa00e23cdfc096ac86d0bc5
+      size: 9249
+  export:
+    cmd: python models/export.py --weights runs/train/weights/best.pt
+    deps:
+    - path: models/export.py
+      md5: 40e67b2f109baefed8313e7261678dbd
+      size: 7263

@@ -352,8 +352,8 @@ def train(hyp, opt, device, tb_writer=None):
             ema.update_attr(model, include=['yaml', 'nc', 'hyp', 'gr', 'names', 'stride', 'class_weights'])
             final_epoch = epoch + 1 == epochs
             # TODO: skip this as of error
-            if False:
-            # if not opt.notest or final_epoch:  # Calculate mAP
+            # if False:
+            if not opt.notest or final_epoch:  # Calculate mAP
                 wandb_logger.current_epoch = epoch + 1
                 # TODO: possibly, dvclive should be treated the same way
                 # it seems this could be connected with resuming the training from some checkpoint epoch
@@ -427,7 +427,8 @@ def train(hyp, opt, device, tb_writer=None):
         # Test best.pt
         logger.info('%g epochs completed in %.3f hours.\n' % (epoch - start_epoch + 1, (time.time() - t0) / 3600))
         # TODO: training errors, remove later
-        if False:  # opt.data.endswith('coco.yaml') and nc == 80:  # if COCO
+        # if False:
+        if opt.data.endswith('coco.yaml') and nc == 80:  # if COCO
             for m in [last, best] if best.exists() else [last]:  # speed, mAP tests
                 results, _, _ = test.test(opt.data,
                                           batch_size=batch_size * 2,

@@ -1,15 +1,15 @@
 train:
   weights: '""'
   cfg: ./models/yolov5s.yaml
-  data: ./data/coco.yaml
+  data: ./data/coco128.yaml
   hyp: data/hyp.scratch.yaml
-  epochs: 2
-  batch_size: 1
+  epochs: 1
+  batch_size: 16
   img_size:
   - 640
   - 640
   rect: false
-  resume: false
+  resume: --resume runs/train/weights/best.pt
   nosave: false
   notest: false
   noautoanchor: false
@@ -25,7 +25,7 @@ train:
   local_rank: -1
   workers: 8
   project: runs/train
-  entity: null
+  entity:
   name: exp
   exist_ok: false
   quad: false
@@ -39,3 +39,30 @@ train:
   global_rank: -1
   save_dir: runs/train
   total_batch_size: 1
+test:
+  weights: runs/train/weights/best.pt
+detect:
+  weights: runs/train/weights/best.pt
+  source: data/images
+  img-size: 640
+  conf-thres: 0.25
+  iou-thres: 0.45
+  max-det: 1000
+  device: "''"
+  view-img: false
+  save-txt: false
+  save-conf: false
+  save-crop: false
+  nosave: false
+  # classes', nargs='+', type=int, help='filter by class: --class 0, or --class 0 2 3')
+  agnostic-nms: false
+  augment: false
+  update: false
+  project: runs/detect
+  exist-ok: false
+  line-thickness: 3
+  hide-labels: false
+  hide-conf: false
+# DISCUSS: we could remove this stage and version this as CI artifacts
+export:
+  weights: runs/train/weights/best.pt

@@ -360,7 +360,7 @@ class LoadImagesAndLabels(Dataset):  # for training/testing
         self.mosaic_border = [-img_size // 2, -img_size // 2]
         self.stride = stride
         self.path = path
-        self.portion = portion
+        # self.portion = portion
 
         try:
             f = []  # image files
@@ -378,10 +378,10 @@ class LoadImagesAndLabels(Dataset):  # for training/testing
                 else:
                     raise Exception(f'{prefix}{p} does not exist')
             self.img_files = sorted([x.replace('/', os.sep) for x in f if x.split('.')[-1].lower() in img_formats])
-            if self.portion > 1:
-                self.img_files = self.img_files[:portion]
-            else:
-                self.img_files = self.img_files[:int(len(self.img_files) * portion)]
+            # if self.portion > 1:
+            #     self.img_files = self.img_files[:portion]
+            # else:
+            #     self.img_files = self.img_files[:int(len(self.img_files) * portion)]
             # self.img_files = sorted([x for x in f if x.suffix[1:].lower() in img_formats])  # pathlib
             assert self.img_files, f'{prefix}No images found'
         except Exception as e:

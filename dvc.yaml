@@ -5,12 +5,14 @@ stages:
     # TODO: add other args from train.py
     # Would be great to unravel yaml dict here **{train} instead of repeating everything
     cmd: python train.py --data ${train.data} --cfg ${train.cfg} --weights ${train.weights} --batch-size
-      ${train.batch_size} --epochs ${train.epochs}
+      ${train.batch_size} --epochs ${train.epochs} ${train.resume}
     outs:
-      - runs/train/weights:
+      - runs/train/weights/last.pt:
+          checkpoint: true
+      - runs/train/weights/best.pt:
           checkpoint: true
       - runs/train/labels_correlogram.jpg
-      - runs/train/labesl.jpg
+      - runs/train/labels.jpg
       - runs/train/train_batch0.jpg
       - runs/train/confusion_matrix.png
       - runs/train/results.png
@@ -19,13 +21,21 @@ stages:
           cache: false
       - runs/train/hyp.yaml:
           cache: false
-  # TODO: should it be here? And detect/export stages?
+  detect:
+    deps:
+      - detect.py
+    cmd: python detect.py --weights ${detect.weights}
+    outs:
+      # should we track runs/detect folder instead of separate pictures?
+      - runs/detect/bus.jpg
+      - runs/detect/zidane.jpg
+  # TODO: should it be here? And detect/export/hubconf stages?
   # SHould they be tracked with dvc? -- Just in dvc, not in pipelines, probably
   test:
-    deps:
+    deps: 
       - test.py
     # TODO: add weights from the last stage and other params
-    cmd: python test.py
+    cmd: python test.py --weights ${test.weights}
     outs:
       - runs/test/F1_curve.png
       - runs/test/P_curve.png
@@ -34,13 +44,20 @@ stages:
       - runs/test/PR_curve.png
       - runs/test/R_curve.png
       - runs/test/test_batch0_labels.jpg
-  # TODO: the same as with the previous job
-  hubconf:
+  export:
     deps:
-      - hubconf.py
-    cmd: python hubconf.py
+      - models/export.py
+    cmd: python models/export.py --weights ${export.weights}
     outs:
-      - runs/hub/bus.jpg
-      - runs/hub/image2.jpg
-      - runs/hub/image4.jpg
-      - runs/hub/zidane.jpg
+      - runs/train/weights/best.torchscript.pt
+      - runs/train/weights/best.onnx
+      - runs/train/weights/best.mlmodel
+  # hubconf:
+  #   deps:
+  #     - hubconf.py
+  #   cmd: python hubconf.py
+  #   outs:
+  #     - runs/hub/bus.jpg
+  #     - runs/hub/image2.jpg
+  #     - runs/hub/image4.jpg
+  #     - runs/hub/zidane.jpg
