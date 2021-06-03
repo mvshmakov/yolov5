@@ -10,6 +10,7 @@ class DVCLogger():
     
     def process_data(self, name, val):
         name = name.replace('/', '_')
+        name = name.replace(':', '_')
         if isinstance(val, torch.Tensor):
             val = val.numpy()
         if isinstance(val, np.ndarray):

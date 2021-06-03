@@ -12,8 +12,8 @@ torchvision>=0.8.1
 tqdm>=4.41.0
 
 # dvc
-dvc>=2.0
-dvclive
+dvc>=2.2
+dvclive>=0.0.3
 
 # logging -------------------------------------
 tensorboard>=2.4.1

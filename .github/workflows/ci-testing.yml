@@ -64,7 +64,12 @@ jobs:
         run: |
           # export PYTHONPATH="$PWD"  # to run '$ python *.py' files in subdirectories
           di=cpu # inference devices  # define device
+          
+          # ci with params.yaml
+          # train
+          python train --params params-test.yaml
 
+          # old-fashioned ci
           # train
           python train.py --img 128 --batch 16 --weights weights/${{ matrix.model }}.pt --cfg models/${{ matrix.model }}.yaml --epochs 1 --device $di
           # detect
