@@ -67,7 +67,7 @@ jobs:
           
           # ci with params.yaml
           # train
-          python train --params params-test.yaml
+          python train.py --params params-test.yaml
 
           # old-fashioned ci
           # train
