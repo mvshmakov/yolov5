@@ -24,6 +24,7 @@ stages:
   detect:
     deps:
       - detect.py
+      - ${detect.weights}
     cmd: python detect.py --weights ${detect.weights}
     outs:
       # should we track runs/detect folder instead of separate pictures?
@@ -34,6 +35,7 @@ stages:
   test:
     deps: 
       - test.py
+      - ${test.weights}
     # TODO: add weights from the last stage and other params
     cmd: python test.py --weights ${test.weights}
     outs:
@@ -47,6 +49,7 @@ stages:
   export:
     deps:
       - models/export.py
+      - ${export.weights}
     cmd: python models/export.py --weights ${export.weights}
     outs:
       - runs/train/weights/best.torchscript.pt

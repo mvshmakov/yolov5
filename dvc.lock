@@ -1,8 +1,8 @@
 schema: '2.0'
 stages:
   train:
-    cmd: python train.py --data ./data/coco128.yaml --cfg ./models/yolov5s.yaml --weights
-      "" --batch-size 16 --epochs 1
+    cmd: 'python train.py --data ./data/coco128.yaml --cfg ./models/yolov5s.yaml --weights
+      "" --batch-size 16 --epochs 1 '
     deps:
     - path: train.py
       md5: b6e6fe503b1beefc84e85c4e4faee151
@@ -21,18 +21,20 @@ stages:
       md5: 0b0eb198177da2345b8a26c86176caea
       size: 349727
     - path: runs/train/results.png
-      md5: 7dd786b6e84a7414760e87f0a1682592
-      size: 139882
+      md5: ded5dc598d21a299fb37661a34c1a46d
+      size: 140559
     - path: runs/train/results.txt
-      md5: 0344516e30ddcfe01ec9dbcf295c5bd9
+      md5: caf27dca49ff55b27c1a18fb3a9561aa
       size: 151
     - path: runs/train/train_batch0.jpg
-      md5: e6705838b75a90e80382b1f273a0e8bf
-      size: 377703
-    - path: runs/train/weights
-      md5: 2f0ef6a2bf6db6fc94e7943f467b3f3e.dir
-      size: 29649694
-      nfiles: 2
+      md5: da1994febf1a6c2fdd7ede9e603ee9ae
+      size: 366167
+    - path: runs/train/weights/best.pt
+      md5: d880a5da17dfc7cbe9c40a5410e0f0f5
+      size: 14824847
+    - path: runs/train/weights/last.pt
+      md5: 54b4eff5fb049c8fb022bae217ae1b3e
+      size: 14824847
   test:
     cmd: python test.py
     deps:

@@ -3,19 +3,19 @@ train:
   cfg: ./models/yolov5s.yaml
   data: ./data/coco128.yaml
   hyp: data/hyp.scratch.yaml
-  epochs: 1
+  epochs: 2  # epochs!
   batch_size: 16
   img_size:
-  - 640
-  - 640
-  rect: false
-  resume: --resume runs/train/weights/best.pt
-  nosave: false
-  notest: false
-  noautoanchor: false
-  evolve: false
+  - 32  # 640 is the default value - change later
+  - 32  # 640 also
+  rect: ''  # rect
+  resume: ''  # --resume path-to-weights.pt
+  nosave: ''  # nosave
+  notest: ''  # notest
+  noautoanchor: ''  # noautoanchor
+  evolve: ''  # evolve
   bucket: ''
-  cache_images: false
+  cache_images: ''  # cache_images
   image_weights: false
   device: ''
   multi_scale: false
