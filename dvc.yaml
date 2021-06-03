@@ -2,10 +2,7 @@ stages:
   train:
     deps:
       - train.py
-    # TODO: add other args from train.py
-    # Would be great to unravel yaml dict here **{train} instead of repeating everything
-    cmd: python train.py --data ${train.data} --cfg ${train.cfg} --weights ${train.weights} --batch-size
-      ${train.batch_size} --epochs ${train.epochs} ${train.resume}
+    cmd: python train.py --params params.yaml
     outs:
       - runs/train/weights/last.pt:
           checkpoint: true
@@ -21,15 +18,6 @@ stages:
           cache: false
       - runs/train/hyp.yaml:
           cache: false
-  detect:
-    deps:
-      - detect.py
-      - ${detect.weights}
-    cmd: python detect.py --weights ${detect.weights}
-    outs:
-      # should we track runs/detect folder instead of separate pictures?
-      - runs/detect/bus.jpg
-      - runs/detect/zidane.jpg
   # TODO: should it be here? And detect/export/hubconf stages?
   # SHould they be tracked with dvc? -- Just in dvc, not in pipelines, probably
   test:
@@ -37,7 +25,7 @@ stages:
       - test.py
       - ${test.weights}
     # TODO: add weights from the last stage and other params
-    cmd: python test.py --weights ${test.weights}
+    cmd: python test.py --params params.yaml
     outs:
       - runs/test/F1_curve.png
       - runs/test/P_curve.png
@@ -46,6 +34,15 @@ stages:
       - runs/test/PR_curve.png
       - runs/test/R_curve.png
       - runs/test/test_batch0_labels.jpg
+  detect:
+    deps:
+      - detect.py
+      - ${detect.weights}
+    cmd: python detect.py --params params.yaml
+    outs:
+      # should we track runs/detect folder instead of separate pictures?
+      - runs/detect/bus.jpg
+      - runs/detect/zidane.jpg
   export:
     deps:
       - models/export.py
