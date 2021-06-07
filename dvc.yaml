@@ -33,7 +33,9 @@ stages:
     # TODO: add weights from the last stage and other params
     cmd: python test.py --params params.yaml
     outs:
-      - runs/test/F1_curve.png
+      # TODO: this is an optional output and pipeline fails when it's not created
+      # see https://github.com/iterative/dvc/issues/4410
+      # - runs/test/F1_curve.png
       - runs/test/P_curve.png
       - runs/test/confusion_matrix.png
       - runs/test/test_batch0_pred.jpg
