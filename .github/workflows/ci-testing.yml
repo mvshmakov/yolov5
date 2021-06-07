@@ -64,24 +64,32 @@ jobs:
         run: |
           # export PYTHONPATH="$PWD"  # to run '$ python *.py' files in subdirectories
           di=cpu # inference devices  # define device
-          
-          # ci with params.yaml
-          # train
-          python train.py --params params-test-end2end.yaml
 
-          # detect
-          python detect.py --params params-test-scripts.yaml
-          python detect.py --params params-test-end2end.yaml
+          # why not do this?
+          cp params-test-end2end.yaml params.yaml
+          # TODO: merge-yaml params.yaml params-test-end2end.yaml -o params.yaml
+          dvc exp run -n test-end2end
 
-          # test
-          python test.py --params params-test-scripts.yaml
-          python test.py --params params-test-end2end.yaml
+          cp params-test-scripts.yaml params.yaml
+          dvc exp run -n test-scripts detect test export
+
+          # # ci with params.yaml -- other option
+          # # train
+          # python train.py --params params-test-end2end.yaml
+
+          # # detect
+          # python detect.py --params params-test-scripts.yaml
+          # python detect.py --params params-test-end2end.yaml
+
+          # # test
+          # python test.py --params params-test-scripts.yaml
+          # python test.py --params params-test-end2end.yaml
 
           # # old-fashioned ci
           # # train
           # python train.py --img 128 --batch 16 --weights weights/${{ matrix.model }}.pt --cfg models/${{ matrix.model }}.yaml --epochs 1 --device $di
           # # detect
-          # python detect.py --weights weights/${{ matrix.model }}.pt --device $di --params params-test.yaml
+          # python detect.py --weights weights/${{ matrix.model }}.pt --device $di
           # python detect.py --weights runs/train/exp/weights/last.pt --device $di
           # # test
           # python test.py --img 128 --batch 16 --weights weights/${{ matrix.model }}.pt --device $di

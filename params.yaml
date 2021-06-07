@@ -3,9 +3,9 @@ train:
   cfg: ''  # model.yaml path
   data: 'data/coco128.yaml'  # data.yaml path
   hyp: 'data/hyp.scratch.yaml'  # hyperparameters path
-  epochs: 300
+  epochs: 1
   batch_size: 16  # total batch size for all GPUs
-  img_size: [640, 640]  # [train, test] image sizes
+  img_size: [32, 32]  # [train, test] image sizes
   rect: false  # rectangular training
   resume: false  # resume most recent training
   nosave: false  # only save final checkpoint

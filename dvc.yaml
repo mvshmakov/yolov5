@@ -1,5 +1,8 @@
 stages:
   train:
+    params:
+      - params.yaml:
+          - train
     deps:
       - train.py
     cmd: python train.py --params params.yaml
@@ -21,6 +24,9 @@ stages:
   # TODO: should it be here? And detect/export/hubconf stages?
   # SHould they be tracked with dvc? -- Just in dvc, not in pipelines, probably
   test:
+    params:
+      - params.yaml:
+          - test
     deps: 
       - test.py
       - ${test.weights}
@@ -35,6 +41,9 @@ stages:
       - runs/test/R_curve.png
       - runs/test/test_batch0_labels.jpg
   detect:
+    params:
+      - params.yaml:
+          - detect
     deps:
       - detect.py
       - ${detect.weights}
@@ -44,6 +53,9 @@ stages:
       - runs/detect/bus.jpg
       - runs/detect/zidane.jpg
   export:
+    params:
+      - params.yaml:
+          - export
     deps:
       - models/export.py
       - ${export.weights}

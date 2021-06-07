@@ -1,12 +1,50 @@
 schema: '2.0'
 stages:
   train:
-    cmd: 'python train.py --data ./data/coco128.yaml --cfg ./models/yolov5s.yaml --weights
-      "" --batch-size 16 --epochs 1 '
+    cmd: python train.py --params params.yaml
     deps:
     - path: train.py
-      md5: b6e6fe503b1beefc84e85c4e4faee151
-      size: 34173
+      md5: 2186ae1065a0c3c00a93aa3c9c8b5616
+      size: 31137
+    params:
+      params.yaml:
+        train:
+          weights: yolov5s.pt
+          cfg: ''
+          data: data/coco128.yaml
+          hyp: data/hyp.scratch.yaml
+          epochs: 1
+          batch_size: 16
+          img_size:
+          - 32
+          - 32
+          rect: false
+          resume: false
+          nosave: false
+          notest: false
+          noautoanchor: false
+          evolve: false
+          bucket: ''
+          cache_images: false
+          image_weights: false
+          device: ''
+          multi_scale: false
+          single_cls: false
+          adam: false
+          sync_bn: false
+          local_rank: -1
+          workers: 8
+          project: runs/train
+          entity:
+          name: exp
+          exist_ok: false
+          quad: false
+          linear_lr: false
+          label_smoothing: 0.0
+          upload_dataset: false
+          bbox_interval: -1
+          save_period: -1
+          artifact_alias: latest
     outs:
     - path: runs/train/confusion_matrix.png
       md5: ea7c12b2de4bf17646ce868e65c7b33c
@@ -21,20 +59,20 @@ stages:
       md5: 0b0eb198177da2345b8a26c86176caea
       size: 349727
     - path: runs/train/results.png
-      md5: ded5dc598d21a299fb37661a34c1a46d
-      size: 140559
+      md5: 43111f6dacbadf4ace270bcb4a84e3bb
+      size: 161359
     - path: runs/train/results.txt
-      md5: caf27dca49ff55b27c1a18fb3a9561aa
+      md5: f380c0b3e044ccc92bca03fc7b42fbdb
       size: 151
     - path: runs/train/train_batch0.jpg
-      md5: da1994febf1a6c2fdd7ede9e603ee9ae
-      size: 366167
+      md5: 0927f38f4b8ac1a6299fdd6767f27a1b
+      size: 8450
     - path: runs/train/weights/best.pt
-      md5: d880a5da17dfc7cbe9c40a5410e0f0f5
-      size: 14824847
+      md5: 56831c62cefbb4901a1ed2975909e0cf
+      size: 14758415
     - path: runs/train/weights/last.pt
-      md5: 54b4eff5fb049c8fb022bae217ae1b3e
-      size: 14824847
+      md5: 93683a15f922e3b107c28dfcff037dcc
+      size: 14758415
   test:
     cmd: python test.py
     deps:
