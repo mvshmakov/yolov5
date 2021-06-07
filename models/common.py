@@ -347,12 +347,13 @@ class Detections:
     def show(self):
         self.display(show=True)  # show results
 
-    def save(self, save_dir='runs/hub'):
-        save_dir = Path(save_dir, exist_ok=save_dir != 'runs/hub', mkdir=True)  # increment save_dir
+    def save(self, save_dir='runs/hub'):  # TODO: why we needed fix here? and not in other modules?
+        save_dir = Path(save_dir)  # increment save_dir
+        save_dir.mkdir(exist_ok=True)
         self.display(save=True, save_dir=save_dir)  # save results
 
     def crop(self, save_dir='runs/hub'):
-        save_dir = Path(save_dir, exist_ok=save_dir != 'runs/hub', mkdir=True)  # increment save_dir
+        save_dir = Path(save_dir, exist_ok=save_dir == 'runs/hub', mkdir=True)  # increment save_dir
         self.display(crop=True, save_dir=save_dir)  # crop results
         print(f'Saved results to {save_dir}\n')
 
