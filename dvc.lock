@@ -59,48 +59,59 @@ stages:
       md5: 0b0eb198177da2345b8a26c86176caea
       size: 349727
     - path: runs/train/results.png
-      md5: 43111f6dacbadf4ace270bcb4a84e3bb
-      size: 161359
+      md5: c744eccbc41010743c77f132e79039f8
+      size: 165262
     - path: runs/train/results.txt
-      md5: f380c0b3e044ccc92bca03fc7b42fbdb
+      md5: 013a7f5765c9f92a5933cfc45773d09e
       size: 151
     - path: runs/train/train_batch0.jpg
-      md5: 0927f38f4b8ac1a6299fdd6767f27a1b
-      size: 8450
+      md5: 079d205c72e1af70dd1f0b61f17fd578
+      size: 8409
     - path: runs/train/weights/best.pt
-      md5: 56831c62cefbb4901a1ed2975909e0cf
+      md5: cc428c17e12a3c142b450a80c2a92da6
       size: 14758415
     - path: runs/train/weights/last.pt
-      md5: 93683a15f922e3b107c28dfcff037dcc
+      md5: e8739c920d1d0c6bb7da182d526475cf
       size: 14758415
   test:
-    cmd: python test.py
+    cmd: python test.py --params params.yaml
     deps:
+    - path: runs/train/weights/best.pt
+      md5: cc428c17e12a3c142b450a80c2a92da6
+      size: 14758415
     - path: test.py
-      md5: b6189ddea1abd6f0f54deb24e15d9784
-      size: 16903
+      md5: fc4fb4c668772ba830ee436b736c9c13
+      size: 15535
+    params:
+      params.yaml:
+        test:
+          weights: runs/train/weights/best.pt
+          data: data/coco128.yaml
+          batch_size: 32
+          img_size: 640
+          conf_thres: 0.001
+          iou_thres: 0.6
+          task: val
+          device: ''
+          single_cls: false
+          augment: false
+          verbose: false
+          save_txt: false
+          save_hybrid: false
+          save_conf: false
+          save_json: false
+          project: runs/test
+          exist_ok: false
     outs:
-    - path: runs/test/F1_curve.png
-      md5: 65f413bb09dfb881cf2b752b6cd75765
-      size: 147008
-    - path: runs/test/PR_curve.png
-      md5: 06f13b031315bca51ff8489db66d73a3
-      size: 61800
-    - path: runs/test/P_curve.png
-      md5: 8a6384aaceb50e5f04d904202a8c201b
-      size: 141776
-    - path: runs/test/R_curve.png
-      md5: cd1ef09868f8bf3d47a93f4932fd79b0
-      size: 87710
     - path: runs/test/confusion_matrix.png
-      md5: d91a4fbf36c0c1aeffd91f7982483f9d
-      size: 440365
+      md5: cd05d57e789bdae624af3fdf474d0879
+      size: 438941
     - path: runs/test/test_batch0_labels.jpg
-      md5: c5389cf23e52a04d2b419ecaa134a521
-      size: 166398
+      md5: 2b176f65bb23b7eb4388a93a92f19625
+      size: 407627
     - path: runs/test/test_batch0_pred.jpg
-      md5: 47bc9a0e3694fa6beeb2445f7307455b
-      size: 159463
+      md5: 41753e0aaae3ee0f5ab1c080a2bf18ba
+      size: 397157
   hubconf:
     cmd: python hubconf.py
     deps:
