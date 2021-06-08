@@ -48,7 +48,6 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -qr requirements.txt -f https://download.pytorch.org/whl/cpu/torch_stable.html
-          # pip install -q onnx
           python --version
           pip --version
           pip list
@@ -80,10 +79,10 @@ jobs:
           # test that dvc pipelines work
           # TODO: merge-yaml params.yaml params-test-end2end.yaml -o params.yaml
           cp params-test-end2end.yaml params.yaml
-          dvc exp run -n test-end2end
+          dvc repro
 
           cp params-test-scripts.yaml params.yaml
-          dvc exp run -n test-scripts detect test export
+          dvc repro detect test export
 
           # # old-fashioned ci
           # # train
@@ -97,5 +96,5 @@ jobs:
 
           python hubconf.py  # hub
           python models/yolo.py --cfg models/${{ matrix.model }}.yaml  # inspect
-          python models/export.py --img 128 --batch 1 --weights weights/${{ matrix.model }}.pt  # export
+          # python models/export.py --params params.yaml  # export
         shell: bash

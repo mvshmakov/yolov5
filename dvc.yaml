@@ -7,10 +7,10 @@ stages:
       - train.py
     cmd: python train.py --params params.yaml
     outs:
-      - runs/train/weights/last.pt:
-          checkpoint: true
-      - runs/train/weights/best.pt:
-          checkpoint: true
+      - runs/train/weights/last.pt  # :
+          # checkpoint: true
+      - runs/train/weights/best.pt  # :
+          # checkpoint: true
       - runs/train/labels_correlogram.jpg
       - runs/train/labels.jpg
       - runs/train/train_batch0.jpg
@@ -61,17 +61,12 @@ stages:
     deps:
       - models/export.py
       - ${export.weights}
-    cmd: python models/export.py --weights ${export.weights}
+    cmd: python models/export.py --params params.yaml
     outs:
-      - runs/train/weights/best.torchscript.pt
-      - runs/train/weights/best.onnx
-      - runs/train/weights/best.mlmodel
-  # hubconf:
-  #   deps:
-  #     - hubconf.py
-  #   cmd: python hubconf.py
-  #   outs:
-  #     - runs/hub/bus.jpg
-  #     - runs/hub/image2.jpg
-  #     - runs/hub/image4.jpg
-  #     - runs/hub/zidane.jpg
+      - runs/export
+    # TODO: I'm not specifying outputs because they are optional
+    # outs:
+    #   - runs/train/weights/best.torchscript.pt
+    #   - runs/train/weights/best.onnx
+    #   - runs/train/weights/best.mlmodel
+  

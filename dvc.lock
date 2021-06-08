@@ -59,25 +59,25 @@ stages:
       md5: 0b0eb198177da2345b8a26c86176caea
       size: 349727
     - path: runs/train/results.png
-      md5: c744eccbc41010743c77f132e79039f8
-      size: 165262
+      md5: 67e8c56da4d36493889c80e82878aa35
+      size: 173930
     - path: runs/train/results.txt
-      md5: 013a7f5765c9f92a5933cfc45773d09e
+      md5: 8efbf0113021d435b21f1093826466c6
       size: 151
     - path: runs/train/train_batch0.jpg
-      md5: 079d205c72e1af70dd1f0b61f17fd578
-      size: 8409
+      md5: 8bc76f9ceea3cb07ffc4c835364c94a1
+      size: 8446
     - path: runs/train/weights/best.pt
-      md5: cc428c17e12a3c142b450a80c2a92da6
+      md5: 13ac2542cb4f27b8eea166b0a6d594cf
       size: 14758415
     - path: runs/train/weights/last.pt
-      md5: e8739c920d1d0c6bb7da182d526475cf
+      md5: 30b39e19f6d509075aa922d76970cc9d
       size: 14758415
   test:
     cmd: python test.py --params params.yaml
     deps:
     - path: runs/train/weights/best.pt
-      md5: cc428c17e12a3c142b450a80c2a92da6
+      md5: 13ac2542cb4f27b8eea166b0a6d594cf
       size: 14758415
     - path: test.py
       md5: fc4fb4c668772ba830ee436b736c9c13
@@ -104,14 +104,14 @@ stages:
           exist_ok: false
     outs:
     - path: runs/test/confusion_matrix.png
-      md5: cd05d57e789bdae624af3fdf474d0879
-      size: 438941
+      md5: ea7c12b2de4bf17646ce868e65c7b33c
+      size: 450345
     - path: runs/test/test_batch0_labels.jpg
-      md5: 2b176f65bb23b7eb4388a93a92f19625
-      size: 407627
+      md5: 64e7a3604033dfcc0f291d1d509972a3
+      size: 411082
     - path: runs/test/test_batch0_pred.jpg
-      md5: 41753e0aaae3ee0f5ab1c080a2bf18ba
-      size: 397157
+      md5: 4c87803b3709db32d63877d9c58a0dfe
+      size: 400717
   hubconf:
     cmd: python hubconf.py
     deps:
@@ -132,14 +132,77 @@ stages:
       md5: 9fe85a9f15900b2e1af0c9572bcf11a7
       size: 99681
   detect:
-    cmd: python detect.py --weights runs/train/weights/best.pt
+    cmd: python detect.py --params params.yaml
     deps:
     - path: detect.py
-      md5: 55e85794afa00e23cdfc096ac86d0bc5
-      size: 9249
+      md5: 6111f0e211d01a61b33b1b37672e7ced
+      size: 7511
+    - path: runs/train/weights/best.pt
+      md5: 13ac2542cb4f27b8eea166b0a6d594cf
+      size: 14758415
+    params:
+      params.yaml:
+        detect:
+          weights: runs/train/weights/best.pt
+          source: data/images
+          img_size: 640
+          conf_thres: 0.25
+          iou_thres: 0.45
+          max_det: 1000
+          device: ''
+          view_img: false
+          save_txt: false
+          save_conf: false
+          save_crop: false
+          nosave: false
+          classes: []
+          agnostic_nms: false
+          augment: false
+          update: false
+          project: runs/detect
+          exist_ok: false
+          line_thickness: 3
+          hide_labels: false
+          hide_conf: false
+    outs:
+    - path: runs/detect/bus.jpg
+      md5: d496f707c2364cac0e9e6ab9ed97676d
+      size: 477571
+    - path: runs/detect/zidane.jpg
+      md5: ca2fc87bf7d23b97b3e4868ecb8ee3b0
+      size: 228954
   export:
-    cmd: python models/export.py --weights runs/train/weights/best.pt
+    cmd: python models/export.py --params params.yaml
     deps:
     - path: models/export.py
-      md5: 40e67b2f109baefed8313e7261678dbd
-      size: 7263
+      md5: f514996563aa532c036c8f66b3d2adfd
+      size: 6777
+    - path: runs/train/weights/best.pt
+      md5: 13ac2542cb4f27b8eea166b0a6d594cf
+      size: 14758415
+    params:
+      params.yaml:
+        export:
+          weights: runs/train/weights/best.pt
+          img_size:
+          - 32
+          - 32
+          batch_size: 1
+          device: cpu
+          include:
+          - torchscript
+          - onnx
+          - coreml
+          half: false
+          inplace: false
+          train: true
+          optimize: false
+          dynamic: false
+          simplify: false
+          opset_version: 12
+          project: runs/export
+    outs:
+    - path: runs/export
+      md5: 524418dfae90f59d8a30edff1534feca.dir
+      size: 87529826
+      nfiles: 3
