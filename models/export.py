@@ -8,6 +8,7 @@ import argparse
 import sys
 import time
 from pathlib import Path
+import yaml
 
 sys.path.append(Path(__file__).parent.parent.absolute().__str__())  # to run '$ python *.py' files in subdirectories
 
@@ -23,28 +24,28 @@ from utils.torch_utils import select_device
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--weights', type=str, default='./yolov5s.pt', help='weights path')
-    parser.add_argument('--img-size', nargs='+', type=int, default=[640, 640], help='image size')  # height, width
-    parser.add_argument('--batch-size', type=int, default=1, help='batch size')
-    parser.add_argument('--device', default='cpu', help='cuda device, i.e. 0 or 0,1,2,3 or cpu')
-    parser.add_argument('--include', nargs='+', default=['torchscript', 'onnx', 'coreml'], help='include formats')
-    parser.add_argument('--half', action='store_true', help='FP16 half-precision export')
-    parser.add_argument('--inplace', action='store_true', help='set YOLOv5 Detect() inplace=True')
-    parser.add_argument('--train', action='store_true', help='model.train() mode')
-    parser.add_argument('--optimize', action='store_true', help='optimize TorchScript for mobile')  # TorchScript-only
-    parser.add_argument('--dynamic', action='store_true', help='dynamic ONNX axes')  # ONNX-only
-    parser.add_argument('--simplify', action='store_true', help='simplify ONNX model')  # ONNX-only
-    parser.add_argument('--opset-version', type=int, default=12, help='ONNX opset version')  # ONNX-only
-    opt = parser.parse_args()
+    parser.add_argument('--params', type=str, default='params.yaml', help='params.yaml path')
+    cli_opt = parser.parse_args()
+    with open(cli_opt.params) as f:
+        params = yaml.safe_load(f)["export"]
+    # TODO: avoid using Namespace and switch to dict usage, probably
+    opt = argparse.Namespace()
+    opt.__dict__ = params
+
     opt.img_size *= 2 if len(opt.img_size) == 1 else 1  # expand
     opt.include = [x.lower() for x in opt.include]
     print(opt)
     set_logging()
     t = time.time()
 
+    # Create folder to store models
+    save_dir = Path(opt.project)
+    save_dir.mkdir(exist_ok=True)
+
     # Load PyTorch model
     device = select_device(opt.device)
     model = attempt_load(opt.weights, map_location=device)  # load FP32 model
+    model_filename = str(Path(opt.weights).name)
     labels = model.names
 
     # Checks
@@ -81,7 +82,8 @@ if __name__ == '__main__':
         prefix = colorstr('TorchScript:')
         try:
             print(f'\n{prefix} starting export with torch {torch.__version__}...')
-            f = opt.weights.replace('.pt', '.torchscript.pt')  # filename
+            # f = opt.weights.replace('.pt', '.torchscript.pt')  # filename
+            f = save_dir / Path(model_filename.replace('.pt', '.torchscript.pt'))
             ts = torch.jit.trace(model, img, strict=False)
             (optimize_for_mobile(ts) if opt.optimize else ts).save(f)
             print(f'{prefix} export success, saved as {f} ({file_size(f):.1f} MB)')
@@ -95,7 +97,8 @@ if __name__ == '__main__':
             import onnx
 
             print(f'{prefix} starting export with onnx {onnx.__version__}...')
-            f = opt.weights.replace('.pt', '.onnx')  # filename
+            # f = opt.weights.replace('.pt', '.onnx')  # filename
+            f = save_dir / Path(model_filename.replace('.pt', '.onnx'))
             torch.onnx.export(model, img, f, verbose=False, opset_version=opt.opset_version, input_names=['images'],
                               training=torch.onnx.TrainingMode.TRAINING if opt.train else torch.onnx.TrainingMode.EVAL,
                               do_constant_folding=not opt.train,
@@ -135,7 +138,8 @@ if __name__ == '__main__':
             print(f'{prefix} starting export with coremltools {ct.__version__}...')
             assert opt.train, 'CoreML exports should be placed in model.train() mode with `python export.py --train`'
             model = ct.convert(ts, inputs=[ct.ImageType('image', shape=img.shape, scale=1 / 255.0, bias=[0, 0, 0])])
-            f = opt.weights.replace('.pt', '.mlmodel')  # filename
+            # f = opt.weights.replace('.pt', '.mlmodel')  # filename
+            f = save_dir / Path(model_filename.replace('.pt', '.mlmodel'))
             model.save(f)
             print(f'{prefix} export success, saved as {f} ({file_size(f):.1f} MB)')
         except Exception as e:
