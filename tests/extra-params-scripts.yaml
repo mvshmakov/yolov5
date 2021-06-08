@@ -1,0 +1,7 @@
+detect:
+  weights: 'yolov5s.pt'  # model.pt path(s)
+test:
+  weights: 'yolov5s.pt'  # model.pt path(s)
+  data: 'data/coco128.yaml'  # *.data path
+export:
+  weights: yolov5s.pt

@@ -76,16 +76,16 @@ stages:
   test:
     cmd: python test.py --params params.yaml
     deps:
-    - path: runs/train/weights/best.pt
-      md5: 13ac2542cb4f27b8eea166b0a6d594cf
-      size: 14758415
     - path: test.py
       md5: fc4fb4c668772ba830ee436b736c9c13
       size: 15535
+    - path: yolov5s.pt
+      md5: 6afd8e05c9539ba4537fd3dfe32db554
+      size: 14795158
     params:
       params.yaml:
         test:
-          weights: runs/train/weights/best.pt
+          weights: yolov5s.pt
           data: data/coco128.yaml
           batch_size: 32
           img_size: 640
@@ -104,14 +104,14 @@ stages:
           exist_ok: false
     outs:
     - path: runs/test/confusion_matrix.png
-      md5: ea7c12b2de4bf17646ce868e65c7b33c
-      size: 450345
+      md5: 989790dbd389a3887fd614c95b89831e
+      size: 440713
     - path: runs/test/test_batch0_labels.jpg
-      md5: 64e7a3604033dfcc0f291d1d509972a3
-      size: 411082
+      md5: b76d0b413b4d1812c749a68f0bc48b8a
+      size: 240745
     - path: runs/test/test_batch0_pred.jpg
-      md5: 4c87803b3709db32d63877d9c58a0dfe
-      size: 400717
+      md5: 73c03e9c20aa0f92225a1f4e571c013e
+      size: 244205
   hubconf:
     cmd: python hubconf.py
     deps:
@@ -137,13 +137,13 @@ stages:
     - path: detect.py
       md5: 6111f0e211d01a61b33b1b37672e7ced
       size: 7511
-    - path: runs/train/weights/best.pt
-      md5: 13ac2542cb4f27b8eea166b0a6d594cf
-      size: 14758415
+    - path: yolov5s.pt
+      md5: 6afd8e05c9539ba4537fd3dfe32db554
+      size: 14795158
     params:
       params.yaml:
         detect:
-          weights: runs/train/weights/best.pt
+          weights: yolov5s.pt
           source: data/images
           img_size: 640
           conf_thres: 0.25
@@ -177,16 +177,16 @@ stages:
     - path: models/export.py
       md5: f514996563aa532c036c8f66b3d2adfd
       size: 6777
-    - path: runs/train/weights/best.pt
-      md5: 13ac2542cb4f27b8eea166b0a6d594cf
-      size: 14758415
+    - path: yolov5s.pt
+      md5: 6afd8e05c9539ba4537fd3dfe32db554
+      size: 14795158
     params:
       params.yaml:
         export:
-          weights: runs/train/weights/best.pt
+          weights: yolov5s.pt
           img_size:
-          - 32
-          - 32
+          - 640
+          - 640
           batch_size: 1
           device: cpu
           include:
@@ -195,7 +195,7 @@ stages:
           - coreml
           half: false
           inplace: false
-          train: true
+          train: false
           optimize: false
           dynamic: false
           simplify: false
@@ -203,6 +203,6 @@ stages:
           project: runs/export
     outs:
     - path: runs/export
-      md5: 524418dfae90f59d8a30edff1534feca.dir
-      size: 87529826
-      nfiles: 3
+      md5: d902528cd425d73c206a02e62d7c14ba.dir
+      size: 58596043
+      nfiles: 2

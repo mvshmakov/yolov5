@@ -77,12 +77,11 @@ jobs:
           # python test.py --params params-test-end2end.yaml
 
           # test that dvc pipelines work
-          # TODO: merge-yaml params.yaml params-test-end2end.yaml -o params.yaml
-          cp params-test-end2end.yaml params.yaml
-          dvc repro
-
-          cp params-test-scripts.yaml params.yaml
+          yq eval-all '. as $item ireduce ({}; . * $item )' params-default.yaml tests/extra-params-scripts.yaml > params.yaml
           dvc repro detect test export
+
+          yq eval-all '. as $item ireduce ({}; . * $item )' params-default.yaml tests/extra-params-end2end.yaml > params.yaml
+          dvc repro
 
           # # old-fashioned ci
           # # train
