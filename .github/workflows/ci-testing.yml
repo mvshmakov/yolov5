@@ -46,7 +46,10 @@ jobs:
 
       - name: Install dependencies
         run: |
-          wget https://github.com/mikefarah/yq/releases/download/v4.9.4/yq_linux_amd64 -O /usr/bin/yq && chmod +x /usr/bin/yq
+          # yq
+          sudo wget https://github.com/mikefarah/yq/releases/download/v4.9.4/yq_linux_amd64 -O /usr/bin/yq
+          sudo chmod +x /usr/bin/yq
+          # python deps
           python -m pip install --upgrade pip
           pip install -qr requirements.txt -f https://download.pytorch.org/whl/cpu/torch_stable.html
           python --version
