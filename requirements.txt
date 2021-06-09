@@ -12,7 +12,7 @@ torchvision>=0.8.1
 tqdm>=4.41.0
 
 # dvc
-dvc>=2.2
+dvc[azure]>=2.2
 dvclive>=0.0.3
 
 # logging -------------------------------------
