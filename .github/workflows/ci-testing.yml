@@ -8,6 +8,7 @@ on:  # https://help.github.com/en/actions/reference/events-that-trigger-workflow
     branches: [ dvc ]
   # schedule:
   #   - cron: '0 0 * * *'  # Runs at 00:00 UTC every day
+  workflow_dispatch:
 
 jobs:
   cpu-tests:
