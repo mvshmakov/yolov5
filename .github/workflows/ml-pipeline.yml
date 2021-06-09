@@ -67,9 +67,14 @@ jobs:
       - name: Tests workflow
         env:
           AZURE_STORAGE_CONNECTION_STRING: ${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}
+          GH_USERNAME: ${{ github.actor }}
         run: |
           # export PYTHONPATH="$PWD"  # to run '$ python *.py' files in subdirectories
           di=cpu # inference devices  # define device
+
+          # setup
+          git config --global user.email "${GH_USERNAME}@users.noreply.github.com"
+          git config --global user.name "${GH_USERNAME}"
 
           # DISCUSS: replacing params file, cause dvc exp run always takes params.yaml
           yq eval-all '. as $item ireduce ({}; . * $item )' params-default.yaml extra-params-training.yaml > params.yaml
