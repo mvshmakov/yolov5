@@ -76,10 +76,11 @@ jobs:
           # python test.py --params params-test-scripts.yaml
           # python test.py --params params-test-end2end.yaml
 
-          # test that dvc pipelines work
+          # test that dvc pipelines work and scripts work against some proven models binaries
           yq eval-all '. as $item ireduce ({}; . * $item )' params-default.yaml tests/extra-params-scripts.yaml > params.yaml
           dvc repro detect test export
 
+          # test that dvc pipelines work and scripts work from train to export
           yq eval-all '. as $item ireduce ({}; . * $item )' params-default.yaml tests/extra-params-end2end.yaml > params.yaml
           dvc repro
 
