@@ -51,6 +51,7 @@ jobs:
           python --version
           pip --version
           pip list
+          wget https://github.com/mikefarah/yq/releases/download/${VERSION}/${BINARY}.tar.gz -O - | tar xz && mv ${BINARY} /usr/bin/yq
         shell: bash
 
       - name: Download data
