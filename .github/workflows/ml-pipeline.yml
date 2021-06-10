@@ -72,6 +72,7 @@ jobs:
           AZURE_STORAGE_CONNECTION_STRING: ${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}
           GH_USERNAME: ${{ github.actor }}
           repo_token: ${{ secrets.GITHUB_TOKEN }}
+          DEFAULT_BRANCH: dvc
         run: |
           # export PYTHONPATH="$PWD"  # to run '$ python *.py' files in subdirectories
           di=cpu # inference devices  # define device
@@ -89,12 +90,12 @@ jobs:
           # Compare metrics to default branch
           echo "## Metrics" >> report.md
           git fetch --prune
-          dvc metrics diff dvc --show-md >> report.md
+          dvc metrics diff $DEFAULT_BRANCH --show-md >> report.md
           
           echo "## Losses" >> report.md
-          dvc plots diff -v --targets runs/train/metrics/val_cls_loss.tsv --show-vega master > vega.json
+          dvc plots diff --targets runs/train/metrics/val_cls_loss.tsv --show-vega $DEFAULT_BRANCH > vega.json
           vl2png vega.json | cml-publish --md >> report.md
-          dvc plots diff -v --targets runs/train/metrics/val_box_loss.tsv --show-vega master > vega.json
+          dvc plots diff --targets runs/train/metrics/val_box_loss.tsv --show-vega $DEFAULT_BRANCH > vega.json
           vl2png vega.json | cml-publish --md >> report.md
 
           cml-send-comment report.md
