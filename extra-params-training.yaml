@@ -1,7 +1,7 @@
 train:
   weights: 'yolov5s.pt'  # initial weights path
   data: 'data/coco128.yaml'  # data.yaml path
-  epochs: 1
+  epochs: 10
   img_size: [32, 32]
 test:
   weights: 'runs/train/weights/best.pt'  # model.pt path(s)

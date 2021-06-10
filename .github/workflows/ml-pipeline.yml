@@ -25,7 +25,8 @@ jobs:
     timeout-minutes: 50
     steps:
       - uses: actions/checkout@v2
-      - uses: iterative/cml-action@v1
+      - name: Set up CML
+        uses: iterative/setup-cml@v1
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v2
         with:
@@ -80,8 +81,15 @@ jobs:
 
           # DISCUSS: replacing params file, cause dvc exp run always takes params.yaml
           yq eval-all '. as $item ireduce ({}; . * $item )' params-default.yaml extra-params-training.yaml > params.yaml
-          dvc pull
+          dvc pull --run-cache
           dvc exp run -S train.device=$di -S test.device=$di -S detect.device=$di
           dvc push
+
+          # Compare metrics to default branch
+          echo "## Metrics" >> report.md
+          git fetch --prune
+          dvc metrics diff dvc --show-md >> report.md
+          
+          cml-send-comment report.md
           
         shell: bash

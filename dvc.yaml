@@ -21,6 +21,11 @@ stages:
           cache: false
       - runs/train/hyp.yaml:
           cache: false
+    live:
+      runs/train/metrics:
+        summary: true
+        html: true
+        cache: false
   # TODO: should it be here? And detect/export/hubconf stages?
   # SHould they be tracked with dvc? -- Just in dvc, not in pipelines, probably
   test:
