@@ -24,6 +24,7 @@ jobs:
     # Timeout: https://stackoverflow.com/a/59076067/4521646
     timeout-minutes: 50
     steps:
+      - uses: iterative/cml-action@v1
       - uses: actions/checkout@v2
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v2
@@ -64,15 +65,16 @@ jobs:
           # unzip -q tmp.zip -d ../
           # rm tmp.zip
 
-      - name: Tests workflow
+      - name: Train the model
         env:
           AZURE_STORAGE_CONNECTION_STRING: ${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}
           GH_USERNAME: ${{ github.actor }}
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
         run: |
           # export PYTHONPATH="$PWD"  # to run '$ python *.py' files in subdirectories
           di=cpu # inference devices  # define device
 
-          # setup
+          # setup credentials as dvc won't allow to push without them
           git config --global user.email "${GH_USERNAME}@users.noreply.github.com"
           git config --global user.name "${GH_USERNAME}"
 
