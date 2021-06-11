@@ -66,7 +66,7 @@ detect:
   save_conf: false  # save confidences in --save-txt labels
   save_crop: false  # save cropped prediction boxes
   nosave: false  # do not save images/videos
-  classes: []  # filter by class: --class 0, or --class 0 2 3
+  classes:  # filter by class: --class 0, or --class 0 2 3
   agnostic_nms: false  # class-agnostic NMS
   augment: false  # augmented inference
   update: false  # update all models

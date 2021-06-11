@@ -3,6 +3,10 @@ stages:
   train:
     cmd: python train.py --params params.yaml
     deps:
+    - path: data/coco128
+      md5: 1b2f4bc507be09df0f44f4550460154d.dir
+      size: 22318116
+      nfiles: 264
     - path: train.py
       md5: 2186ae1065a0c3c00a93aa3c9c8b5616
       size: 31137
@@ -47,8 +51,8 @@ stages:
           artifact_alias: latest
     outs:
     - path: runs/train/confusion_matrix.png
-      md5: 9b6ad2fbbedffb5b45146d776cb4352a
-      size: 437924
+      md5: d712347e19a92532e72bf0ebbb2baa7c
+      size: 437798
     - path: runs/train/hyp.yaml
       md5: 3afabb397cf52e37a10987f329e97b96
       size: 356
@@ -59,23 +63,23 @@ stages:
       md5: 0b0eb198177da2345b8a26c86176caea
       size: 349727
     - path: runs/train/metrics
-      md5: 0ee5716d6d91a23aba2c2c3b9563ddce.dir
-      size: 5055
+      md5: 6433d2fca5de73a7191145ee393073f8.dir
+      size: 5067
       nfiles: 13
     - path: runs/train/results.png
-      md5: d6fa529333698473748f555a96178449
-      size: 311557
+      md5: 603685f22408e3c1d716269760af0323
+      size: 295339
     - path: runs/train/results.txt
-      md5: 08d72b1e1ece6a519540668b5a16ab2a
+      md5: a2f740759e7b8f259df7046c9f1749b0
       size: 1510
     - path: runs/train/train_batch0.jpg
-      md5: 04dd89d1b6f362b2b1ffc318f1b618f3
-      size: 8420
+      md5: 3eda6ab77ccf7682fed5f5686fccfe33
+      size: 8439
     - path: runs/train/weights/best.pt
-      md5: efc9268878bd0e7a2dd5d4ba6180d3b6
+      md5: 61090ddf0364befb287bc3bb746cd706
       size: 14758671
     - path: runs/train/weights/last.pt
-      md5: dba522799f45b889f3b84d03e7ec4b3f
+      md5: bee497ad426b06fd44c1027d4f60351a
       size: 14758671
   test:
     cmd: python test.py --params params.yaml
@@ -142,7 +146,7 @@ stages:
       md5: 6111f0e211d01a61b33b1b37672e7ced
       size: 7511
     - path: runs/train/weights/best.pt
-      md5: efc9268878bd0e7a2dd5d4ba6180d3b6
+      md5: 61090ddf0364befb287bc3bb746cd706
       size: 14758671
     params:
       params.yaml:
@@ -155,11 +159,11 @@ stages:
           max_det: 1000
           device: ''
           view_img: false
-          save_txt: false
+          save_txt: true
           save_conf: false
           save_crop: false
           nosave: false
-          classes: []
+          classes:
           agnostic_nms: false
           augment: false
           update: false
@@ -170,11 +174,11 @@ stages:
           hide_conf: false
     outs:
     - path: runs/detect/bus.jpg
-      md5: d496f707c2364cac0e9e6ab9ed97676d
-      size: 477571
+      md5: ff732ae9a35d8a4fa076a048e02d702e
+      size: 570226
     - path: runs/detect/zidane.jpg
-      md5: ca2fc87bf7d23b97b3e4868ecb8ee3b0
-      size: 228954
+      md5: fc98ab54fc004e0d28000bc073c0f6a5
+      size: 325322
   export:
     cmd: python models/export.py --params params.yaml
     deps:
