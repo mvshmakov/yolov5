@@ -61,12 +61,6 @@ jobs:
           pip list
         shell: bash
 
-      - name: Download data
-        run: |
-          # curl -L -o tmp.zip https://github.com/ultralytics/yolov5/releases/download/v1.0/coco128.zip
-          # unzip -q tmp.zip -d ../
-          # rm tmp.zip
-
       - name: Train the model
         env:
           AZURE_STORAGE_CONNECTION_STRING: ${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}

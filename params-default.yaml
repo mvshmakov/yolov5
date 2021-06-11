@@ -1,3 +1,5 @@
+download:
+  dataset: coco128
 train:
   weights: 'yolov5s.pt'  # initial weights path
   cfg: ''  # model.yaml path

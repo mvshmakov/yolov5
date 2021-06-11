@@ -210,3 +210,14 @@ stages:
       md5: b54b825b0e4106e127debc9473fe935c.dir
       size: 58594205
       nfiles: 2
+  download:
+    cmd: bash data/scripts/get_coco128.sh
+    params:
+      params.yaml:
+        download:
+          dataset: coco128
+    outs:
+    - path: data/coco128
+      md5: d9c6c94f003f3af98414a74e9dd6ce3b.dir
+      size: 22274101
+      nfiles: 263

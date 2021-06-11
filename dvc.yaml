@@ -1,9 +1,17 @@
 stages:
+  download:
+    params:
+      - params.yaml:
+        - download
+    cmd: bash data/scripts/get_${download.dataset}.sh
+    outs:
+      - data/${download.dataset}
   train:
     params:
       - params.yaml:
           - train
     deps:
+      - data/${download.dataset}
       - train.py
     cmd: python train.py --params params.yaml
     outs:
