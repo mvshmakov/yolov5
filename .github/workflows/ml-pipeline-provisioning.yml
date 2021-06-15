@@ -1,0 +1,120 @@
+name: Model training with provisioning
+
+on:  # https://help.github.com/en/actions/reference/events-that-trigger-workflows
+  push:
+    branches: [ dvc ]
+  pull_request:
+    # The branches below must be a subset of the branches above
+    branches: [ dvc ]
+  # schedule:
+  #   - cron: '0 0 * * *'  # Runs at 00:00 UTC every day
+  workflow_dispatch:
+
+jobs:
+  deploy-runner:
+    runs-on: [ubuntu-latest]
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: iterative/setup-cml@v1
+
+      - name: deploy
+        shell: bash
+        env:
+          repo_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          AZURE_STORAGE_CONNECTION_STRING: ${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}
+        run: |
+          cml-runner \
+          --cloud aws \
+          --cloud-region us-west \
+          --cloud-type=g3.4xlarge \
+          --cloud-hdd-size 64 \
+          --labels=cml-runner
+
+  model-training:
+    needs: deploy-runner
+    runs-on: [self-hosted,cml-runner]
+    container:
+      image: docker://dvcorg/cml:0-dvc2-base1-gpu
+      options: --gpus all
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+        python-version: [3.8]
+        model: ['yolov5s']  # models to train
+
+    # Timeout: https://stackoverflow.com/a/59076067/4521646
+    timeout-minutes: 50
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up CML
+        uses: iterative/setup-cml@v1
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      # Note: This uses an internal pip API and may not always work
+      # https://github.com/actions/cache/blob/master/examples.md#multiple-oss-in-a-workflow
+      - name: Get pip cache
+        id: pip-cache
+        run: |
+          python -c "from pip._internal.locations import USER_CACHE_DIR; print('::set-output name=dir::' + USER_CACHE_DIR)"
+
+      - name: Cache pip
+        uses: actions/cache@v1
+        with:
+          path: ${{ steps.pip-cache.outputs.dir }}
+          key: ${{ runner.os }}-${{ matrix.python-version }}-pip-${{ hashFiles('requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ matrix.python-version }}-pip-
+
+      - name: Install dependencies
+        run: |
+          # yq
+          sudo wget -q https://github.com/mikefarah/yq/releases/download/v4.9.4/yq_linux_amd64 -O /usr/bin/yq
+          sudo chmod +x /usr/bin/yq
+          # 
+          # python deps
+          python -m pip install --upgrade pip
+          pip install -qr requirements.txt -f https://download.pytorch.org/whl/cpu/torch_stable.html
+          python --version
+          pip --version
+          pip list
+        shell: bash
+
+      - name: Train the model
+        env:
+          AZURE_STORAGE_CONNECTION_STRING: ${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}
+          GH_USERNAME: ${{ github.actor }}
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          DEFAULT_BRANCH: dvc
+        run: |
+          # export PYTHONPATH="$PWD"  # to run '$ python *.py' files in subdirectories
+          di=cpu # inference devices  # define device
+
+          # setup credentials as dvc won't allow to push without them
+          git config --global user.email "${GH_USERNAME}@users.noreply.github.com"
+          git config --global user.name "${GH_USERNAME}"
+
+          # DISCUSS: replacing params file, cause dvc exp run always takes params.yaml
+          yq eval-all '. as $item ireduce ({}; . * $item )' params-default.yaml extra-params-training.yaml > params.yaml
+          dvc pull --run-cache
+          dvc exp run -S train.device=$di -S test.device=$di -S detect.device=$di
+          dvc push
+
+          # Compare metrics to default branch
+          echo "## Metrics" >> report.md
+          git fetch --prune
+          dvc metrics diff $DEFAULT_BRANCH --show-md >> report.md
+          
+          echo "## Losses" >> report.md
+          dvc plots diff --targets runs/train/metrics/val_cls_loss.tsv --show-vega $DEFAULT_BRANCH > vega.json
+          vl2png vega.json | cml-publish --md >> report.md
+          dvc plots diff --targets runs/train/metrics/val_box_loss.tsv --show-vega $DEFAULT_BRANCH > vega.json
+          vl2png vega.json | cml-publish --md >> report.md
+
+          cml-send-comment report.md
+          
+        shell: bash
