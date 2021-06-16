@@ -126,3 +126,9 @@ jobs:
           cml-send-comment report.md
           
         shell: bash
+        
+      - name: Archive training artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: exported-models
+          path: runs/export
