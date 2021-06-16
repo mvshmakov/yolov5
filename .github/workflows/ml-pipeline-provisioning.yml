@@ -22,19 +22,22 @@ jobs:
         shell: bash
         env:
           REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          AZURE_STORAGE_CONNECTION_STRING: ${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}
           AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
           AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
           AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
         run: |
           cml-runner \
+          --cloud-spot \
           --cloud azure \
-          --cloud-region eu-west \
-          --cloud-type Standard_NC4as_T4_v3 \
-          --cloud-hdd-size 64 \
-          --cloud-gpu v100 \
-          --labels=cml-runner
+          --cloud-region eastus \
+          --cloud-type Standard_NC6 \
+          --idle-timeout 3600 \
+          # --cloud-type Standard_NC4as_T4_v3 \
+          # --cloud-gpu v100 \
+          # --cloud-hdd-size 64 \
+          --labels cml-runner
+
 
   model-training:
     needs: deploy-runner
