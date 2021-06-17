@@ -32,11 +32,10 @@ jobs:
           --cloud azure \
           --cloud-region eastus \
           --cloud-type Standard_NC6 \
-          --idle-timeout 3600 \
+          --labels cml-runner
           # --cloud-type Standard_NC4as_T4_v3 \
           # --cloud-gpu v100 \
           # --cloud-hdd-size 64 \
-          --labels cml-runner
 
 
   model-training:
