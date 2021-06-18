@@ -31,7 +31,7 @@ jobs:
           --cloud-spot \
           --cloud azure \
           --cloud-region centralus \
-          --cloud-type Standard_D8s_v3 \
+          --cloud-type Standard_E8s_v3 \
           --idle-timeout 300 \
           --labels cml-runner
           # --cloud-type Standard_NC4as_T4_v3 \
