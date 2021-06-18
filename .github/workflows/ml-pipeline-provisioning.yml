@@ -30,7 +30,7 @@ jobs:
           cml-runner \
           --cloud-spot \
           --cloud azure \
-          --cloud-region northeurope \
+          --cloud-region centralus \
           --cloud-type Standard_D8s_v3 \
           --idle-timeout 300 \
           --labels cml-runner
@@ -39,9 +39,9 @@ jobs:
           # --cloud-hdd-size 64 \
 
 
-  model-training:
+  model-training-cml-runner:
     needs: deploy-runner
-    runs-on: [self-hosted,cml-runner]
+    runs-on: [self-hosted, cml-runner]
     container:
       image: docker://dvcorg/cml:0-dvc2-base1  #-gpu
       # options: --gpus all
@@ -80,6 +80,8 @@ jobs:
 
       - name: Install dependencies
         run: |
+          # ImportError: libGL.so.1: cannot open shared object file: No such file or directory
+          apt-get install ffmpeg libsm6 libxext6  -y
           # yq
           sudo wget -q https://github.com/mikefarah/yq/releases/download/v4.9.4/yq_linux_amd64 -O /usr/bin/yq
           sudo chmod +x /usr/bin/yq
