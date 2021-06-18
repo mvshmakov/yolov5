@@ -44,6 +44,7 @@ jobs:
     runs-on: [self-hosted, cml-runner]
     container:
       image: docker://dvcorg/cml:0-dvc2-base1  #-gpu
+      options: --ipc=host
       # options: --gpus all
     strategy:
       fail-fast: false
