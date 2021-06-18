@@ -30,7 +30,7 @@ jobs:
           cml-runner \
           --cloud-spot \
           --cloud azure \
-          --cloud-region eastus \
+          --cloud-region northeurope \
           --cloud-type Standard_NC6 \
           --idle-timeout 3600 \
           --labels cml-runner
