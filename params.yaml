@@ -1,5 +1,12 @@
+base:
+  project_name: PLACEHOLDER-YOLOv5-Application-Name
+  random_state: 42
+  log_level: DEBUG
+  dataset_dir: PLACEHOLDER-DATASET-PATH # data for model training with yolov5
+
 download:
   dataset: coco128
+
 train:
   weights: 'yolov5s.pt' # initial weights path
   cfg: '' # model.yaml path
@@ -35,6 +42,7 @@ train:
   bbox_interval: -1 # Set bounding-box image logging interval for W&B
   save_period: -1 # Log model after every "save_period" epoch
   artifact_alias: latest # version of dataset artifact to be used
+
 test:
   weights: 'runs/train/weights/best.pt' # model.pt path(s)
   data: 'data/coco128.yaml' # *.data path
@@ -55,7 +63,7 @@ test:
   exist_ok: false # existing project/name ok, do not increment
 detect:
   weights: 'runs/train/weights/best.pt' # model.pt path(s)
-  source: 'data/images' # source: file/folder, 0 for webcam
+  source: 'data/images/detect' # source: file/folder, 0 for webcam
   img_size: 640 # inference size (pixels)
   conf_thres: 0.25 # object confidence threshold
   iou_thres: 0.45 # IOU threshold for NMS

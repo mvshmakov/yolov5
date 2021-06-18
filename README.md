@@ -63,6 +63,12 @@ Python 3.8 or later with all [requirements.txt](https://github.com/ultralytics/y
 $ pip install -r requirements.txt
 ```
 
+## Install 
+To install in editable mode from a local repository
+```bash
+pip install --no-index --use-feature=in-tree-build -e  PATH-TO-LOCAL-DIR/yolov5 yolo5
+```
+
 
 ## Tutorials
 

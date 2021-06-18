@@ -1,19 +1,20 @@
 stages:
+
   download:
+    cmd: bash data/scripts/get_${download.dataset}.sh
     params:
       - params.yaml:
         - download
-    cmd: bash data/scripts/get_${download.dataset}.sh
     outs:
       - data/${download.dataset}
+
   train:
+    cmd: python -m yolo5.train --params params.yaml
     params:
       - params.yaml:
           - train
     deps:
-      - data/${download.dataset}
-      - train.py
-    cmd: python train.py --params params.yaml
+      - data/coco128.yaml # YAML with paths to train/valid data specified
     outs:
       - runs/train/weights/last.pt  # :
           # checkpoint: true
@@ -29,22 +30,18 @@ stages:
           cache: false
       - runs/train/hyp.yaml:
           cache: false
-    live:
-      runs/train/metrics:
-        summary: true
-        html: true
-        cache: false
+  
   # TODO: should it be here? And detect/export/hubconf stages?
   # SHould they be tracked with dvc? -- Just in dvc, not in pipelines, probably
   test:
+     # TODO: add weights from the last stage and other params
+    cmd: python -m yolo5.test --params params.yaml
     params:
       - params.yaml:
           - test
     deps: 
-      - test.py
       - ${test.weights}
-    # TODO: add weights from the last stage and other params
-    cmd: python test.py --params params.yaml
+      - runs/train/weights/best.pt
     outs:
       # TODO: optional outputs are commented, cause pipeline fails when they are not created
       # see https://github.com/iterative/dvc/issues/4410
@@ -55,26 +52,25 @@ stages:
       # - runs/test/PR_curve.png
       # - runs/test/R_curve.png
       - runs/test/test_batch0_labels.jpg
+ 
   detect:
+    cmd: python -m yolo5.detect --params params.yaml
     params:
       - params.yaml:
           - detect
     deps:
-      - detect.py
       - ${detect.weights}
-    cmd: python detect.py --params params.yaml
-    outs:
+      - runs/train/weights/best.pt
+    # outs:
       # should we track runs/detect folder instead of separate pictures?
-      - runs/detect/bus.jpg
-      - runs/detect/zidane.jpg
+
   export:
+    cmd: python -m yolo5.models.export --params params.yaml
     params:
       - params.yaml:
           - export
     deps:
-      - models/export.py
       - ${export.weights}
-    cmd: python models/export.py --params params.yaml
     outs:
       - runs/export
     # TODO: I'm not specifying outputs because they are optional
@@ -82,4 +78,3 @@ stages:
     #   - runs/train/weights/best.torchscript.pt
     #   - runs/train/weights/best.onnx
     #   - runs/train/weights/best.mlmodel
-  
