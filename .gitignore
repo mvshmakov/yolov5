@@ -1,3 +1,8 @@
+# ML data, artifacts & Jupyter Notebooks.
+notebooks/*
+*.ipynb
+
+
 # Repo-specific GitIgnore ----------------------------------------------------------------------------------------------
 *.jpg
 *.jpeg
@@ -250,3 +255,4 @@ com_crashlytics_export_strings.xml
 crashlytics.properties
 crashlytics-build.properties
 fabric.properties
+/siim_covid_256px_jpg.yaml
