@@ -1,16 +1,16 @@
 common_parameters:
-  img_size: &img_size 640
-  weights: &weights 'yolov5s.pt'
+  img_size: &img_size 32
+  weights: &weights 'runs/train/weights/best.pt'
   device: &device ''
   data: &data 'data/coco128.yaml'
 download:
   dataset: coco128
 train:
-  weights: *weights # initial weights path
-  cfg: '' # model.yaml path
+  weights: '' # initial weights path
+  cfg: 'models/yolov5s.yaml' # model.yaml path
   data: *data # data.yaml path
   hyp: 'data/hyp.scratch.yaml' # hyperparameters path
-  epochs: 300
+  epochs: 1
   batch_size: 16 # total batch size for all GPUs
   img_size: [*img_size, *img_size] # [train, test] image sizes
   rect: false # rectangular training
@@ -88,7 +88,7 @@ export:
   include: ['torchscript', 'onnx', 'coreml'] # include formats
   half: False # FP16 half-precision export
   inplace: False # set YOLOv5 Detect() inplace=True
-  train: True # model.train() mode
+  train: False # model.train() mode
   optimize: False # optimize TorchScript for mobile  # TorchScript-only
   dynamic: False # dynamic ONNX axes  # ONNX-only
   simplify: False # simplify ONNX model  # ONNX-only

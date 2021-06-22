@@ -63,29 +63,29 @@ stages:
       md5: 0b0eb198177da2345b8a26c86176caea
       size: 349727
     - path: runs/train/metrics
-      md5: e1653ed9319378152fd3f395dcbfec4b.dir
-      size: 793
+      md5: 706481270745898e8da49400d64832a0.dir
+      size: 792
       nfiles: 13
     - path: runs/train/results.png
-      md5: a8e96f3cfb6c35110c815538974bf355
-      size: 164175
+      md5: e8e3979ae61a708df98e2dc087dd140e
+      size: 163231
     - path: runs/train/results.txt
-      md5: 50b8cbc331a3eaed5b1217016a6c58dd
+      md5: 08d8d23f39460e590ebec4ed10253f28
       size: 151
     - path: runs/train/train_batch0.jpg
-      md5: e1f868b68ac3d53a3a5eaabc183094ec
-      size: 8444
+      md5: 1d4ceaef436a10a0c9a4583ea90bc30e
+      size: 8456
     - path: runs/train/weights/best.pt
-      md5: 2a513c531ff20f0d220b4f82b9fe3be2
+      md5: 4bb49b1e0601838afd5feda147b43787
       size: 14758415
     - path: runs/train/weights/last.pt
-      md5: 4644ef8fc2e9f455b6e62d180d24f173
+      md5: 20e84aa6d6dbe6b60977f3ac5f2f63ff
       size: 14758415
   test:
     cmd: python test.py --params params.yaml
     deps:
     - path: runs/train/weights/best.pt
-      md5: 2a513c531ff20f0d220b4f82b9fe3be2
+      md5: 4bb49b1e0601838afd5feda147b43787
       size: 14758415
     - path: test.py
       md5: fc4fb4c668772ba830ee436b736c9c13
@@ -115,11 +115,11 @@ stages:
       md5: ea7c12b2de4bf17646ce868e65c7b33c
       size: 450345
     - path: runs/test/test_batch0_labels.jpg
-      md5: 52bc5746b392bf94994b8ac6f68faf05
-      size: 20130
+      md5: 17878420b387326007f6bfd37c515a7f
+      size: 20857
     - path: runs/test/test_batch0_pred.jpg
-      md5: 3c2956f7bfc2c1d13ca9af0bbc911a16
-      size: 16588
+      md5: a80eb50cd4b9aacf617493a869c8dde3
+      size: 17672
   hubconf:
     cmd: python hubconf.py
     deps:
@@ -146,7 +146,7 @@ stages:
       md5: 6111f0e211d01a61b33b1b37672e7ced
       size: 7511
     - path: runs/train/weights/best.pt
-      md5: 2a513c531ff20f0d220b4f82b9fe3be2
+      md5: 4bb49b1e0601838afd5feda147b43787
       size: 14758415
     params:
       params.yaml:
@@ -185,16 +185,16 @@ stages:
     - path: models/export.py
       md5: f514996563aa532c036c8f66b3d2adfd
       size: 6777
-    - path: yolov5s.pt
-      md5: 6afd8e05c9539ba4537fd3dfe32db554
-      size: 14795158
+    - path: runs/train/weights/best.pt
+      md5: 4bb49b1e0601838afd5feda147b43787
+      size: 14758415
     params:
       params.yaml:
         export:
-          weights: yolov5s.pt
+          weights: runs/train/weights/best.pt
           img_size:
-          - 640
-          - 640
+          - 32
+          - 32
           batch_size: 1
           device: ''
           include:
@@ -203,7 +203,7 @@ stages:
           - coreml
           half: false
           inplace: false
-          train: true
+          train: false
           optimize: false
           dynamic: false
           simplify: false
@@ -211,9 +211,9 @@ stages:
           project: runs/export
     outs:
     - path: runs/export
-      md5: c98e78a0895d1df4a4d3731f40006926.dir
-      size: 87531663
-      nfiles: 3
+      md5: 5b6826f1fcb45823ad2b0cec729fd329.dir
+      size: 58460085
+      nfiles: 2
   download:
     cmd: bash data/scripts/get_coco128.sh
     params:
