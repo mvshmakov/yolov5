@@ -5,4 +5,4 @@ common_parameters:
 download:
   dataset: coco128
 train:
-  epochs: 1
+  epochs: 20
