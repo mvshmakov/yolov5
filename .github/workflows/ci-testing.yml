@@ -60,6 +60,8 @@ jobs:
         shell: bash
 
       - name: Tests workflow
+        env:
+          AZURE_STORAGE_CONNECTION_STRING: ${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}
         run: |
           # export PYTHONPATH="$PWD"  # to run '$ python *.py' files in subdirectories
           di=cpu # inference devices  # define device
