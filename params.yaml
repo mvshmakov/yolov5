@@ -1,13 +1,18 @@
+common_parameters:
+  img_size: &img_size 640
+  weights: &weights 'yolov5s.pt'
+  device: &device ''
+  data: &data 'data/coco128.yaml'
 download:
   dataset: coco128
 train:
-  weights: 'yolov5s.pt' # initial weights path
+  weights: *weights # initial weights path
   cfg: '' # model.yaml path
-  data: 'data/coco128.yaml' # data.yaml path
+  data: *data # data.yaml path
   hyp: 'data/hyp.scratch.yaml' # hyperparameters path
-  epochs: 10
+  epochs: 300
   batch_size: 16 # total batch size for all GPUs
-  img_size: [32, 32] # [train, test] image sizes
+  img_size: [*img_size, *img_size] # [train, test] image sizes
   rect: false # rectangular training
   resume: false # resume most recent training
   nosave: false # only save final checkpoint
@@ -17,7 +22,7 @@ train:
   bucket: '' # gsutil bucket
   cache_images: false # cache images for faster training
   image_weights: false # use weighted image selection for training
-  device: '' # cuda device, i.e. 0 or 0,1,2,3 or cpu
+  device: *device # cuda device, i.e. 0 or 0,1,2,3 or cpu
   multi_scale: false # vary img-size +/- 50%%
   single_cls: false # train multi-class data as single-class
   adam: false # use torch.optim.Adam() optimizer
@@ -36,14 +41,14 @@ train:
   save_period: -1 # Log model after every "save_period" epoch
   artifact_alias: latest # version of dataset artifact to be used
 test:
-  weights: 'runs/train/weights/best.pt' # model.pt path(s)
-  data: 'data/coco128.yaml' # *.data path
+  weights: *weights # model.pt path(s)
+  data: *data # *.data path
   batch_size: 32 # size of each image batch
-  img_size: 640 # inference size (pixels)
+  img_size: *img_size # inference size (pixels)
   conf_thres: 0.001 # object confidence threshold
   iou_thres: 0.6 # IOU threshold for NMS
   task: 'val' # train, val, test, speed or study
-  device: '' # cuda device, i.e. 0 or 0,1,2,3 or cpu
+  device: *device # cuda device, i.e. 0 or 0,1,2,3 or cpu
   single_cls: false # treat as single-class dataset
   augment: false # augmented inference
   verbose: false # report mAP by class
@@ -54,19 +59,19 @@ test:
   project: 'runs/test' # save to project/name
   exist_ok: false # existing project/name ok, do not increment
 detect:
-  weights: 'runs/train/weights/best.pt' # model.pt path(s)
+  weights: *weights # model.pt path(s)
   source: 'data/images' # source: file/folder, 0 for webcam
-  img_size: 640 # inference size (pixels)
+  img_size: *img_size # inference size (pixels)
   conf_thres: 0.25 # object confidence threshold
   iou_thres: 0.45 # IOU threshold for NMS
   max_det: 1000 # maximum number of detections per image
-  device: '' # cuda device, i.e. 0 or 0,1,2,3 or cpu
+  device: *device # cuda device, i.e. 0 or 0,1,2,3 or cpu
   view_img: false # display results
-  save_txt: true # save results to *.txt
+  save_txt: false # save results to *.txt
   save_conf: false # save confidences in --save-txt labels
   save_crop: false # save cropped prediction boxes
   nosave: false # do not save images/videos
-  classes:  # filter by class: --class 0, or --class 0 2 3
+  classes: # filter by class: --class 0, or --class 0 2 3
   agnostic_nms: false # class-agnostic NMS
   augment: false # augmented inference
   update: false # update all models
@@ -75,16 +80,15 @@ detect:
   line_thickness: 3 # bounding box thickness (pixels)
   hide_labels: false # hide labels
   hide_conf: false # hide confidences
-# DISCUSS: we could remove this stage and version this as CI artifacts
 export:
-  weights: runs/train/weights/best.pt # './yolov5s.pt'  # weights path
-  img_size: [640, 640] # image size  # height, width
+  weights: *weights # './yolov5s.pt'  # weights path
+  img_size: [*img_size, *img_size] # image size  # height, width
   batch_size: 1 # batch size
-  device: 'cpu' # cuda device, i.e. 0 or 0,1,2,3 or cpu
+  device: *device # cuda device, i.e. 0 or 0,1,2,3 or cpu
   include: ['torchscript', 'onnx', 'coreml'] # include formats
   half: False # FP16 half-precision export
   inplace: False # set YOLOv5 Detect() inplace=True
-  train: False # model.train() mode
+  train: True # model.train() mode
   optimize: False # optimize TorchScript for mobile  # TorchScript-only
   dynamic: False # dynamic ONNX axes  # ONNX-only
   simplify: False # simplify ONNX model  # ONNX-only

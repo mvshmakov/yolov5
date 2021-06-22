@@ -67,6 +67,7 @@ stages:
       # should we track runs/detect folder instead of separate pictures?
       - runs/detect/bus.jpg
       - runs/detect/zidane.jpg
+  # DISCUSS: we could remove this stage and version this as CI artifacts
   export:
     params:
       - params.yaml:

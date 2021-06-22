@@ -1,7 +1,10 @@
-detect:
-  weights: 'yolov5s.pt'  # model.pt path(s)
-test:
-  weights: 'yolov5s.pt'  # model.pt path(s)
-  data: 'data/coco128.yaml'  # *.data path
+common_parameters:
+  weights: &weights 'yolov5s.pt'
+  data: &data 'data/coco128.yaml'
+download:
+  dataset: coco128
+train:
+  weights: *weights
+  cfg: ''
 export:
-  weights: yolov5s.pt
+  train: True

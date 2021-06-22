@@ -13,11 +13,11 @@ stages:
     params:
       params.yaml:
         train:
-          weights: yolov5s.pt
-          cfg: ''
+          weights: ''
+          cfg: models/yolov5s.yaml
           data: data/coco128.yaml
           hyp: data/hyp.scratch.yaml
-          epochs: 10
+          epochs: 1
           batch_size: 16
           img_size:
           - 32
@@ -51,8 +51,8 @@ stages:
           artifact_alias: latest
     outs:
     - path: runs/train/confusion_matrix.png
-      md5: d712347e19a92532e72bf0ebbb2baa7c
-      size: 437798
+      md5: ea7c12b2de4bf17646ce868e65c7b33c
+      size: 450345
     - path: runs/train/hyp.yaml
       md5: 3afabb397cf52e37a10987f329e97b96
       size: 356
@@ -63,30 +63,30 @@ stages:
       md5: 0b0eb198177da2345b8a26c86176caea
       size: 349727
     - path: runs/train/metrics
-      md5: 6433d2fca5de73a7191145ee393073f8.dir
-      size: 5067
+      md5: e1653ed9319378152fd3f395dcbfec4b.dir
+      size: 793
       nfiles: 13
     - path: runs/train/results.png
-      md5: 603685f22408e3c1d716269760af0323
-      size: 295339
+      md5: a8e96f3cfb6c35110c815538974bf355
+      size: 164175
     - path: runs/train/results.txt
-      md5: a2f740759e7b8f259df7046c9f1749b0
-      size: 1510
+      md5: 50b8cbc331a3eaed5b1217016a6c58dd
+      size: 151
     - path: runs/train/train_batch0.jpg
-      md5: 3eda6ab77ccf7682fed5f5686fccfe33
-      size: 8439
+      md5: e1f868b68ac3d53a3a5eaabc183094ec
+      size: 8444
     - path: runs/train/weights/best.pt
-      md5: 61090ddf0364befb287bc3bb746cd706
-      size: 14758671
+      md5: 2a513c531ff20f0d220b4f82b9fe3be2
+      size: 14758415
     - path: runs/train/weights/last.pt
-      md5: bee497ad426b06fd44c1027d4f60351a
-      size: 14758671
+      md5: 4644ef8fc2e9f455b6e62d180d24f173
+      size: 14758415
   test:
     cmd: python test.py --params params.yaml
     deps:
     - path: runs/train/weights/best.pt
-      md5: efc9268878bd0e7a2dd5d4ba6180d3b6
-      size: 14758671
+      md5: 2a513c531ff20f0d220b4f82b9fe3be2
+      size: 14758415
     - path: test.py
       md5: fc4fb4c668772ba830ee436b736c9c13
       size: 15535
@@ -96,7 +96,7 @@ stages:
           weights: runs/train/weights/best.pt
           data: data/coco128.yaml
           batch_size: 32
-          img_size: 640
+          img_size: 32
           conf_thres: 0.001
           iou_thres: 0.6
           task: val
@@ -112,14 +112,14 @@ stages:
           exist_ok: false
     outs:
     - path: runs/test/confusion_matrix.png
-      md5: 21073ad04061962a33a7740a7fd725c5
-      size: 438072
+      md5: ea7c12b2de4bf17646ce868e65c7b33c
+      size: 450345
     - path: runs/test/test_batch0_labels.jpg
-      md5: b76d0b413b4d1812c749a68f0bc48b8a
-      size: 240745
+      md5: 52bc5746b392bf94994b8ac6f68faf05
+      size: 20130
     - path: runs/test/test_batch0_pred.jpg
-      md5: 25342ff6072ac8eb286947397fbd854f
-      size: 405288
+      md5: 3c2956f7bfc2c1d13ca9af0bbc911a16
+      size: 16588
   hubconf:
     cmd: python hubconf.py
     deps:
@@ -146,20 +146,20 @@ stages:
       md5: 6111f0e211d01a61b33b1b37672e7ced
       size: 7511
     - path: runs/train/weights/best.pt
-      md5: 61090ddf0364befb287bc3bb746cd706
-      size: 14758671
+      md5: 2a513c531ff20f0d220b4f82b9fe3be2
+      size: 14758415
     params:
       params.yaml:
         detect:
           weights: runs/train/weights/best.pt
           source: data/images
-          img_size: 640
+          img_size: 32
           conf_thres: 0.25
           iou_thres: 0.45
           max_det: 1000
           device: ''
           view_img: false
-          save_txt: true
+          save_txt: false
           save_conf: false
           save_crop: false
           nosave: false
@@ -174,36 +174,36 @@ stages:
           hide_conf: false
     outs:
     - path: runs/detect/bus.jpg
-      md5: ff732ae9a35d8a4fa076a048e02d702e
-      size: 570226
+      md5: d496f707c2364cac0e9e6ab9ed97676d
+      size: 477571
     - path: runs/detect/zidane.jpg
-      md5: fc98ab54fc004e0d28000bc073c0f6a5
-      size: 325322
+      md5: ca2fc87bf7d23b97b3e4868ecb8ee3b0
+      size: 228954
   export:
     cmd: python models/export.py --params params.yaml
     deps:
     - path: models/export.py
       md5: f514996563aa532c036c8f66b3d2adfd
       size: 6777
-    - path: runs/train/weights/best.pt
-      md5: efc9268878bd0e7a2dd5d4ba6180d3b6
-      size: 14758671
+    - path: yolov5s.pt
+      md5: 6afd8e05c9539ba4537fd3dfe32db554
+      size: 14795158
     params:
       params.yaml:
         export:
-          weights: runs/train/weights/best.pt
+          weights: yolov5s.pt
           img_size:
           - 640
           - 640
           batch_size: 1
-          device: cpu
+          device: ''
           include:
           - torchscript
           - onnx
           - coreml
           half: false
           inplace: false
-          train: false
+          train: true
           optimize: false
           dynamic: false
           simplify: false
@@ -211,9 +211,9 @@ stages:
           project: runs/export
     outs:
     - path: runs/export
-      md5: b54b825b0e4106e127debc9473fe935c.dir
-      size: 58594205
-      nfiles: 2
+      md5: c98e78a0895d1df4a4d3731f40006926.dir
+      size: 87531663
+      nfiles: 3
   download:
     cmd: bash data/scripts/get_coco128.sh
     params:
