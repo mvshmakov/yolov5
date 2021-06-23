@@ -62,6 +62,7 @@ jobs:
       - name: Tests workflow
         env:
           AZURE_STORAGE_CONNECTION_STRING: ${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}
+          DEFAULT_BRANCH: dvc
         run: |
           set -x
           # export PYTHONPATH="$PWD"  # to run '$ python *.py' files in subdirectories
@@ -85,7 +86,7 @@ jobs:
 
           # test that dvc pipelines work and scripts work against some proven models binaries
           yq eval-all '. as $item ireduce ({}; . * $item )' params-default.yaml tests/extra-params-scripts.yaml > params.yaml
-          dvc get $GITHUB_SERVER_URL/$GITHUB_REPOSITORY --rev $BASE_REF yolov5s.pt
+          dvc get $GITHUB_SERVER_URL/$GITHUB_REPOSITORY --rev $DEFAULT_BRANCH yolov5s.pt
           dvc repro detect test export
 
           python hubconf.py  # hub
