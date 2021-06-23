@@ -11,7 +11,7 @@ train:
   data: *data
               # data.yaml path
   hyp: data/hyp.scratch.yaml   # hyperparameters path
-  epochs: 20
+  epochs: 100
   batch_size: 16 # total batch size for all GPUs
   img_size: [*img_size, *img_size] # [train, test] image sizes
   rect: false # rectangular training
