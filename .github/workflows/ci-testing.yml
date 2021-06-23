@@ -84,11 +84,14 @@ jobs:
           yq eval-all '. as $item ireduce ({}; . * $item )' params-default.yaml tests/extra-params-end2end.yaml > params.yaml
           dvc repro
 
-          # test that dvc pipelines work and scripts work against some proven models binaries
-          yq eval-all '. as $item ireduce ({}; . * $item )' params-default.yaml tests/extra-params-scripts.yaml > params.yaml
-          dvc get $GITHUB_SERVER_URL/$GITHUB_REPOSITORY --rev $DEFAULT_BRANCH yolov5s.pt
-          dvc repro detect test export
-
           python hubconf.py  # hub
           python models/yolo.py --cfg models/${{ matrix.model }}.yaml  # inspect
+
+          # test that dvc pipelines work and scripts work against some proven models weights
+          yq eval-all '. as $item ireduce ({}; . * $item )' params-default.yaml tests/extra-params-scripts.yaml > params.yaml
+          # TODO: the weights now are stored in default branch, may be better to move somewhere
+          # dvc get $GITHUB_SERVER_URL/$GITHUB_REPOSITORY --rev $DEFAULT_BRANCH yolov5s.pt
+          dvc pull yolo5s.pt
+          dvc repro detect test export
+
         shell: bash
