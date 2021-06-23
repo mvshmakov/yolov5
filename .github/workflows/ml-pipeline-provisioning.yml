@@ -105,6 +105,7 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           DEFAULT_BRANCH: dvc
         run: |
+          set -x
           # export PYTHONPATH="$PWD"  # to run '$ python *.py' files in subdirectories
           di=cpu # inference devices  # define device
 
