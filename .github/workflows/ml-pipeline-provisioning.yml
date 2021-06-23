@@ -139,3 +139,14 @@ jobs:
         with:
           name: exported-models
           path: runs/export
+
+      - name: Commit changes
+        run: |
+          git commit -m "Add changes from model training in CI" -a
+        shell: bash
+
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.ref }}
