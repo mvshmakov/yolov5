@@ -85,7 +85,7 @@ jobs:
 
           # test that dvc pipelines work and scripts work against some proven models binaries
           yq eval-all '. as $item ireduce ({}; . * $item )' params-default.yaml tests/extra-params-scripts.yaml > params.yaml
-          dvc get . yolov5s.pt
+          dvc get $GITHUB_SERVER_URL/$GITHUB_REPOSITORY --rev $GITHUB_SHA yolov5s.pt
           dvc repro detect test export
 
           python hubconf.py  # hub
