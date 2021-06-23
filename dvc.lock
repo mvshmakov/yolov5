@@ -63,29 +63,29 @@ stages:
       md5: 0b0eb198177da2345b8a26c86176caea
       size: 349727
     - path: runs/train/metrics
-      md5: f9f0fcee4aea28365c635381ef70779f.dir
-      size: 8978
+      md5: 72bad5cb539beac17de3bd3444100146.dir
+      size: 8977
       nfiles: 13
     - path: runs/train/results.png
-      md5: e0a1094eea4578e8ff020d1e336e1576
-      size: 214829
+      md5: 8bc0958711c26d950e86d3f8ae482caa
+      size: 215204
     - path: runs/train/results.txt
-      md5: 1d36b2845a0f1f5fa925cec79e5ee2b9
+      md5: ba3fb8973732077a9725ee00b141e9ba
       size: 3020
     - path: runs/train/train_batch0.jpg
       md5: 3af784368f5005137ac9332b08aeffb8
       size: 8406
     - path: runs/train/weights/best.pt
-      md5: f13108d1dee71bbb2fa0686c7e2228ef
+      md5: ad886a7cf21575088d573087428a9142
       size: 14748833
     - path: runs/train/weights/last.pt
-      md5: f13108d1dee71bbb2fa0686c7e2228ef
+      md5: ad886a7cf21575088d573087428a9142
       size: 14748833
   test:
     cmd: python test.py --params params.yaml
     deps:
     - path: runs/train/weights/best.pt
-      md5: f13108d1dee71bbb2fa0686c7e2228ef
+      md5: ad886a7cf21575088d573087428a9142
       size: 14748833
     - path: test.py
       md5: fc4fb4c668772ba830ee436b736c9c13
@@ -146,7 +146,7 @@ stages:
       md5: 6111f0e211d01a61b33b1b37672e7ced
       size: 7511
     - path: runs/train/weights/best.pt
-      md5: f13108d1dee71bbb2fa0686c7e2228ef
+      md5: ad886a7cf21575088d573087428a9142
       size: 14748833
     params:
       params.yaml:
@@ -186,7 +186,7 @@ stages:
       md5: f514996563aa532c036c8f66b3d2adfd
       size: 6777
     - path: runs/train/weights/best.pt
-      md5: f13108d1dee71bbb2fa0686c7e2228ef
+      md5: ad886a7cf21575088d573087428a9142
       size: 14748833
     params:
       params.yaml:
@@ -211,7 +211,7 @@ stages:
           project: runs/export
     outs:
     - path: runs/export
-      md5: caeff82643bd41e3b4f2d01675740896.dir
+      md5: 3f5547272762aecd351db8bb4a0a056e.dir
       size: 58459317
       nfiles: 2
   download:
