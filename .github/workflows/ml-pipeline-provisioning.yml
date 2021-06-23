@@ -115,7 +115,9 @@ jobs:
 
           # DISCUSS: replacing params file, cause dvc exp run always takes params.yaml
           yq eval-all '. as $item ireduce ({}; . * $item )' params-default.yaml extra-params-training.yaml > params.yaml
+          set +e
           dvc pull --run-cache
+          set -e
           dvc exp run -S train.device=$di -S test.device=$di -S detect.device=$di
           dvc push
 
