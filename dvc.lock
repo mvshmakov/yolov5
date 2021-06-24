@@ -1,12 +1,14 @@
 schema: '2.0'
 stages:
   train:
-    cmd: 'python train.py --data ./data/coco128.yaml --cfg ./models/yolov5s.yaml --weights
-      "" --batch-size 16 --epochs 1 '
+    cmd: python train.py  --weights '' --cfg models/yolov5s.yaml --data data/coco128.yaml
+      --hyp data/hyp.scratch.yaml --epochs 1 --batch-size 16 --img-size 32 32 --bucket
+      '' --device cpu --local_rank -1 --workers 8 --project runs/train --name exp
+      --label-smoothing 0.0 --bbox_interval -1 --save_period -1 --artifact_alias latest
     deps:
     - path: train.py
-      md5: b6e6fe503b1beefc84e85c4e4faee151
-      size: 34173
+      md5: 4a96f23ff4c9608a00a24c6783697c1e
+      size: 34291
     outs:
     - path: runs/train/confusion_matrix.png
       md5: ea7c12b2de4bf17646ce868e65c7b33c
@@ -21,48 +23,36 @@ stages:
       md5: 0b0eb198177da2345b8a26c86176caea
       size: 349727
     - path: runs/train/results.png
-      md5: ded5dc598d21a299fb37661a34c1a46d
-      size: 140559
+      md5: 69ac7f268382c6483ac862add064fac0
+      size: 161581
     - path: runs/train/results.txt
-      md5: caf27dca49ff55b27c1a18fb3a9561aa
+      md5: 8f76d78a9a8bcfebdba81a9710233e7a
       size: 151
     - path: runs/train/train_batch0.jpg
-      md5: da1994febf1a6c2fdd7ede9e603ee9ae
-      size: 366167
+      md5: 3af784368f5005137ac9332b08aeffb8
+      size: 8406
     - path: runs/train/weights/best.pt
-      md5: d880a5da17dfc7cbe9c40a5410e0f0f5
-      size: 14824847
+      md5: 3438693ee9f22b8702732f04bcbac70b
+      size: 14748833
     - path: runs/train/weights/last.pt
-      md5: 54b4eff5fb049c8fb022bae217ae1b3e
-      size: 14824847
+      md5: 3438693ee9f22b8702732f04bcbac70b
+      size: 14748833
   test:
-    cmd: python test.py
+    cmd: python test.py  --weights runs/train/weights/best.pt --data data/coco128.yaml
+      --batch-size 32 --img-size 32 --conf-thres 0.001 --iou-thres 0.6 --task val
+      --device cpu --project runs/test
     deps:
+    - path: runs/train/weights/best.pt
+      md5: 3438693ee9f22b8702732f04bcbac70b
+      size: 14748833
     - path: test.py
       md5: b6189ddea1abd6f0f54deb24e15d9784
       size: 16903
     outs:
-    - path: runs/test/F1_curve.png
-      md5: 65f413bb09dfb881cf2b752b6cd75765
-      size: 147008
-    - path: runs/test/PR_curve.png
-      md5: 06f13b031315bca51ff8489db66d73a3
-      size: 61800
-    - path: runs/test/P_curve.png
-      md5: 8a6384aaceb50e5f04d904202a8c201b
-      size: 141776
-    - path: runs/test/R_curve.png
-      md5: cd1ef09868f8bf3d47a93f4932fd79b0
-      size: 87710
-    - path: runs/test/confusion_matrix.png
-      md5: d91a4fbf36c0c1aeffd91f7982483f9d
-      size: 440365
-    - path: runs/test/test_batch0_labels.jpg
-      md5: c5389cf23e52a04d2b419ecaa134a521
-      size: 166398
-    - path: runs/test/test_batch0_pred.jpg
-      md5: 47bc9a0e3694fa6beeb2445f7307455b
-      size: 159463
+    - path: runs/test
+      md5: 298ebd3dae3ae78f588e546179a1dcef.dir
+      size: 567571
+      nfiles: 7
   hubconf:
     cmd: python hubconf.py
     deps:
@@ -83,14 +73,31 @@ stages:
       md5: 9fe85a9f15900b2e1af0c9572bcf11a7
       size: 99681
   detect:
-    cmd: python detect.py --weights runs/train/weights/best.pt
+    cmd: python detect.py  --weights runs/train/weights/best.pt --source data/images
+      --img-size 32 --conf-thres 0.25 --iou-thres 0.45 --max-det 1000 --device cpu
+      --project runs/detect --line-thickness 3
     deps:
     - path: detect.py
       md5: 55e85794afa00e23cdfc096ac86d0bc5
       size: 9249
+    - path: runs/train/weights/best.pt
+      md5: 3438693ee9f22b8702732f04bcbac70b
+      size: 14748833
+    outs:
+    - path: runs/detect/bus.jpg
+      md5: d496f707c2364cac0e9e6ab9ed97676d
+      size: 477571
+    - path: runs/detect/zidane.jpg
+      md5: ca2fc87bf7d23b97b3e4868ecb8ee3b0
+      size: 228954
   export:
-    cmd: python models/export.py --weights runs/train/weights/best.pt
+    cmd: python models/export.py  --weights runs/train/weights/best.pt --img-size
+      32 32 --batch-size 1 --device '' --include torchscript onnx coreml --opset-version
+      12
     deps:
     - path: models/export.py
       md5: 40e67b2f109baefed8313e7261678dbd
       size: 7263
+    - path: runs/train/weights/best.pt
+      md5: 3438693ee9f22b8702732f04bcbac70b
+      size: 14748833

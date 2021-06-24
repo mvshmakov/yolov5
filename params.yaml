@@ -11,7 +11,7 @@ train:
   data: *data
               # data.yaml path
   hyp: data/hyp.scratch.yaml   # hyperparameters path
-  epochs: 20
+  epochs: 1
   batch-size: 16 # total batch size for all GPUs
   img-size: [*img_size, *img_size] # [train, test] image sizes
   rect: false # rectangular training
@@ -47,11 +47,11 @@ test:
                     # model.pt path(s)
   data: *data
               # *.data path
-  batch_size: 32 # size of each image batch
-  img_size: *img_size
+  batch-size: 32 # size of each image batch
+  img-size: *img_size
                       # inference size (pixels)
-  conf_thres: 0.001 # object confidence threshold
-  iou_thres: 0.6 # IOU threshold for NMS
+  conf-thres: 0.001 # object confidence threshold
+  iou-thres: 0.6 # IOU threshold for NMS
   task: val   # train, val, test, speed or study
   device: cpu
                   # cuda device, i.e. 0 or 0,1,2,3 or cpu
@@ -68,11 +68,11 @@ detect:
   weights: *weights
                     # model.pt path(s)
   source: data/images   # source: file/folder, 0 for webcam
-  img_size: *img_size
+  img-size: *img_size
                       # inference size (pixels)
-  conf_thres: 0.25 # object confidence threshold
-  iou_thres: 0.45 # IOU threshold for NMS
-  max_det: 1000 # maximum number of detections per image
+  conf-thres: 0.25 # object confidence threshold
+  iou-thres: 0.45 # IOU threshold for NMS
+  max-det: 1000 # maximum number of detections per image
   device: cpu
                   # cuda device, i.e. 0 or 0,1,2,3 or cpu
   view_img: false # display results
@@ -86,14 +86,14 @@ detect:
   update: false # update all models
   project: runs/detect   # save results to project/name
   exist_ok: false # existing project/name ok, do not increment
-  line_thickness: 3 # bounding box thickness (pixels)
+  line-thickness: 3 # bounding box thickness (pixels)
   hide_labels: false # hide labels
   hide_conf: false # hide confidences
 export:
   weights: *weights
                     # './yolov5s.pt'  # weights path
-  img_size: [*img_size, *img_size] # image size  # height, width
-  batch_size: 1 # batch size
+  img-size: [*img_size, *img_size] # image size  # height, width
+  batch-size: 1 # batch size
   device: *device
                   # cuda device, i.e. 0 or 0,1,2,3 or cpu
   include: [torchscript, onnx, coreml]       # include formats
@@ -103,5 +103,4 @@ export:
   optimize: false # optimize TorchScript for mobile  # TorchScript-only
   dynamic: false # dynamic ONNX axes  # ONNX-only
   simplify: false # simplify ONNX model  # ONNX-only
-  opset_version: 12 # ONNX opset version  # ONNX-only
-  project: runs/export
+  opset-version: 12 # ONNX opset version  # ONNX-only
