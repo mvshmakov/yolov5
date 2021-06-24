@@ -4,8 +4,7 @@ stages:
       - train.py
     # TODO: add other args from train.py
     # Would be great to unravel yaml dict here **{train} instead of repeating everything
-    cmd: python train.py --data ${train.data} --cfg ${train.cfg} --weights ${train.weights} --batch-size
-      ${train.batch_size} --epochs ${train.epochs} ${train.resume}
+    cmd: python train.py ${train}
     outs:
       - runs/train/weights/last.pt:
           checkpoint: true
@@ -25,7 +24,7 @@ stages:
     deps:
       - detect.py
       - ${detect.weights}
-    cmd: python detect.py --weights ${detect.weights}
+    cmd: python detect.py ${detect}
     outs:
       # should we track runs/detect folder instead of separate pictures?
       - runs/detect/bus.jpg
@@ -37,7 +36,7 @@ stages:
       - test.py
       - ${test.weights}
     # TODO: add weights from the last stage and other params
-    cmd: python test.py --weights ${test.weights}
+    cmd: python test.py ${test}
     outs:
       - runs/test/F1_curve.png
       - runs/test/P_curve.png
@@ -50,7 +49,7 @@ stages:
     deps:
       - models/export.py
       - ${export.weights}
-    cmd: python models/export.py --weights ${export.weights}
+    cmd: python models/export.py ${export}
     outs:
       - runs/train/weights/best.torchscript.pt
       - runs/train/weights/best.onnx
