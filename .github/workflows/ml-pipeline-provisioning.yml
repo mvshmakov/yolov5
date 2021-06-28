@@ -142,13 +142,16 @@ jobs:
           name: exported-models
           path: runs/export
 
-      - name: Commit changes
+      - name: Find out branch for PR
+        if: github.event_name == 'pull_request'
+        uses: mdecoleman/pr-branch-name@1.0.1
+        id: vars
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Commit & Push changes
         run: |
           git commit -m "Add changes from model training in CI" -a
+          export BRANCH_NAME=${steps.vars.outputs.branch:-${GITHUB_REF:-default}}
+          git push git@github.com:${GITHUB_REPOSITORY}.git HEAD:${BRANCH_NAME}
         shell: bash
-
-      - name: Push changes
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: ${{ github.ref }}
