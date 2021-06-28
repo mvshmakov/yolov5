@@ -144,9 +144,12 @@ jobs:
 
       - name: Commit & Push changes
         env:
-          GH_HEAD_REF: ${{ github.head_ref }}
+          PR_BRANCH: ${{ github.head_ref }}
+          GH_HEAD_REF: ${{ github.ref }}
         run: |
+          echo $PR_BRANCH
+          echo $GH_HEAD_REF
           git commit -m "Add changes from model training in CI" -a
-          export BRANCH_NAME=${steps.vars.outputs.branch:-${GH_HEAD_REF:-default}}
+          export BRANCH_NAME=${PR_BRANCH:-${GH_HEAD_REF:-default}}
           git push git@github.com:${GITHUB_REPOSITORY}.git HEAD:${BRANCH_NAME}
         shell: bash
