@@ -155,8 +155,8 @@ jobs:
           # git push git@github.com:${GITHUB_REPOSITORY}.git HEAD:${BRANCH_NAME}
         shell: bash
 
-    - name: Push changes
-      uses: ad-m/github-push-action@master
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        branch: ${{ github.head_ref }}
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.head_ref }}
