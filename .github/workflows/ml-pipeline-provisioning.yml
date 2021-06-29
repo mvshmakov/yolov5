@@ -59,8 +59,10 @@ jobs:
     timeout-minutes: 50
     steps:
       - uses: actions/checkout@v2
+
       - name: Set up CML
         uses: iterative/setup-cml@v1
+      
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v2
         with:
@@ -153,6 +155,7 @@ jobs:
           git commit -m "Add changes from model training in CI" -a
           export BRANCH_NAME=${PR_BRANCH:-${GH_HEAD_REF:-default}}
           # git push git@github.com:${GITHUB_REPOSITORY}.git HEAD:${BRANCH_NAME}
+          git pull --rebase
         shell: bash
 
       - name: Push changes
