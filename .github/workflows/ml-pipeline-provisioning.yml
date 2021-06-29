@@ -104,7 +104,8 @@ jobs:
         env:
           AZURE_STORAGE_CONNECTION_STRING: ${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}
           GH_USERNAME: ${{ github.actor }}
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          # repo_token: ${{ secrets.GITHUB_TOKEN }}
+          REPO_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
           DEFAULT_BRANCH: dvc
         run: |
           set -x
