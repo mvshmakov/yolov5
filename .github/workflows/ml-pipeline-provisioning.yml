@@ -149,7 +149,9 @@ jobs:
           PR_BRANCH: ${{ github.head_ref }}
           GH_HEAD_REF: ${{ github.ref }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB: ${{ github }} 
         run: |
+          echo $GITHUB
           echo $PR_BRANCH
           echo $GH_HEAD_REF
           git commit -m "Add changes from model training in CI" -a
