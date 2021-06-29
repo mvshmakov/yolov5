@@ -24,7 +24,6 @@
 !cfg/yolov3*.cfg
 
 storage.googleapis.com
-runs/*
 data/*
 !data/images/zidane.jpg
 !data/images/bus.jpg
@@ -39,6 +38,14 @@ data/*
 pycocotools/*
 results*.txt
 gcp_test*.sh
+
+# runs folders specifically
+runs/*
+!runs/train
+
+runs/train/*
+!runs/train/metrics.json
+!runs/train/metrics/*
 
 # Datasets -------------------------------------------------------------------------------------------------------------
 coco/
