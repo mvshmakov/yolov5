@@ -134,6 +134,7 @@ jobs:
           dvc plots diff --targets runs/train/metrics/val_box_loss.tsv --show-vega $DEFAULT_BRANCH > vega.json
           vl2png vega.json | cml-publish --md >> report.md
 
+          cml-pr --md **/* >> report.md
           cml-send-comment report.md
           
         shell: bash
@@ -143,25 +144,3 @@ jobs:
         with:
           name: exported-models
           path: runs/export
-
-      - name: Commit changes
-        env:
-          PR_BRANCH: ${{ github.head_ref }}
-          GH_HEAD_REF: ${{ github.ref }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GITHUB: ${{ github }} 
-        run: |
-          echo $GITHUB
-          echo $PR_BRANCH
-          echo $GH_HEAD_REF
-          git commit -m "Add changes from model training in CI" -a
-          export BRANCH_NAME=${PR_BRANCH:-${GH_HEAD_REF:-default}}
-          # git push git@github.com:${GITHUB_REPOSITORY}.git HEAD:${BRANCH_NAME}
-          git pull --rebase
-        shell: bash
-
-      - name: Push changes
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: ${{ github.head_ref }}
