@@ -45,6 +45,7 @@ runs/*
 
 runs/train/*
 !runs/train/metrics.json
+!runs/train/metrics
 !runs/train/metrics/*
 
 # Datasets -------------------------------------------------------------------------------------------------------------
