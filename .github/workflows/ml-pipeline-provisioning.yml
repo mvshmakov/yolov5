@@ -142,7 +142,7 @@ jobs:
           name: exported-models
           path: runs/export
 
-      - name: Commit & Push changes
+      - name: Commit changes
         env:
           PR_BRANCH: ${{ github.head_ref }}
           GH_HEAD_REF: ${{ github.ref }}
@@ -152,5 +152,11 @@ jobs:
           echo $GH_HEAD_REF
           git commit -m "Add changes from model training in CI" -a
           export BRANCH_NAME=${PR_BRANCH:-${GH_HEAD_REF:-default}}
-          git push git@github.com:${GITHUB_REPOSITORY}.git HEAD:${BRANCH_NAME}
+          # git push git@github.com:${GITHUB_REPOSITORY}.git HEAD:${BRANCH_NAME}
         shell: bash
+
+    - name: Push changes
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        branch: ${{ github.head_ref }}
